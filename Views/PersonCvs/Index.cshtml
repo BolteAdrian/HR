@@ -1,0 +1,200 @@
+﻿@model ReflectionIT.Mvc.Paging.PagingList<HR.Models.PersonCv>
+@using ReflectionIT.Mvc.Paging
+@addTagHelper *, ReflectionIT.Mvc.Paging
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>CVs</h1>
+
+
+
+
+<input type="button" value="Add Person" class="btn btn-success text-white" onclick="location.href='@Url.Action("Create", "PersonCvs")'" />
+
+<br />
+
+<form method="get" class="form-inline">
+    <input name="filter" class="form-control" placeholder=""
+           value="@Model.RouteValue["Filter"]" />
+    <button type="submit" class="btn btn-info">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+    </button><br />
+    <a asp-action="Index">     Get All Persons</a>
+</form>
+
+
+<div class="text-right">
+    <form method="post" asp-controller="PersonCvs" asp-action="ExportToExcel">
+        <input type="submit" value="Export To Excel" />
+    </form>
+</div>
+
+
+
+<div class="" style="width:40%;margin-top:2%">
+    <table class="table table-bordered ">
+        <thead class="thead-dark">
+            <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.SortableHeaderFor(model => model.Id)
+                </th>
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                    @Html.SortableHeaderFor(model => model.Name)
+                </th>
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayNameFor(model => model.DateApply)
+                </th>
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayNameFor(model => model.FunctionApply)
+                </th>
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayNameFor(model => model.FunctionMatch)
+                </th>
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayNameFor(model => model.Observation)
+                </th>
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayNameFor(model => model.ModeApply)
+                </th>
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayNameFor(model => model.CountyAddress)
+                </th>
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayNameFor(model => model.CityAddress)
+                </th>
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayNameFor(model => model.BirthDate)
+                </th>
+
+                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => item.DateApply)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => item.FunctionApply)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => item.FunctionMatch)
+                </td>
+
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => item.Observation)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => item.ModeApply)
+                </td>
+
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => item.CountyAddress)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => item.CityAddress)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => item.BirthDate)
+                </td>
+
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+
+                    <a class="btn btn-info text-white" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <b class="btn btn-danger">
+                        <a onclick="ConfirmDelete(@item.Id)">Delete <i class="glyphicon-trash"></i>  </a>
+
+                    </b>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h3 class="modal-title">Delete person</h3>
+                </div>
+                <div class="modal-body">
+                    <h4>Are you sure ? You want to delete this. </h4>
+
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                    <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <input type="hidden" id="hiddenId" />
+
+</div>
+
+
+<nav aria-label="Suppliers navigation example">
+    <vc:pager paging-list="@Model" />
+</nav>
+
+<script>
+
+
+    var ConfirmDelete = function (Id) {
+
+        $("#hiddenId").val(Id);
+        $("#myModal").modal('show');
+
+    }
+
+    var DeleteEmployee = function () {
+
+        $("#loaderDiv").show();
+
+        var EmployeeId = $("#hiddenId").val();
+
+        $.ajax({
+
+
+            /*            url: "/InterviewCvs/DeleteEmployee",*/
+            url: '@Url.Action("DeleteEmployee","PersonCvs")/',
+            data: { EmployeeId: EmployeeId },
+            success: function (result) {
+                $("#loaderDiv").hide();
+                $("#myModal").modal("hide");
+                $("#row_" + EmployeeId).remove();
+                location.reload();
+
+            },
+            error: function (result) {
+                console.log(result
+                )
+            }
+
+        })
+
+    }
+</script>
+
+
+
+
+<input type="button" value="Back" onclick="location.href='@Url.Action("Index", "Home")'" />

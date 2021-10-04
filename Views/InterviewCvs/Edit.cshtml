@@ -1,0 +1,117 @@
+﻿@model HR.Models.InterviewCv
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>InterviewCv</h4>
+<hr />
+<div class="row">
+    <div class="col">
+        <form asp-action="Edit">
+            <div class="row">
+                <div class="col-xl-6">
+
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="PersonCvid" class="control-label"></label>
+                        <select asp-for="PersonCvid" class="form-control" asp-items="ViewBag.PersonCvid"></select>
+                        <span asp-validation-for="PersonCvid" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="InterviewDate" class="control-label"></label>
+                        <input asp-for="InterviewDate" class="form-control" />
+                        <span asp-validation-for="InterviewDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FunctionApply" class="control-label"></label>
+                        <input asp-for="FunctionApply" class="form-control" />
+                        <span asp-validation-for="FunctionApply" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DepartamentApply" class="control-label"></label>
+                        <input asp-for="DepartamentApply" class="form-control" />
+                        <span asp-validation-for="DepartamentApply" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Accepted" class="control-label"></label>
+                        <input asp-for="Accepted" class="form-control" />
+                        <span asp-validation-for="Accepted" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TestResult" class="control-label"></label>
+                        <input asp-for="TestResult" class="form-control" />
+                        <span asp-validation-for="TestResult" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="RefusedReason" class="control-label"></label>
+                        <input asp-for="RefusedReason" class="form-control" />
+                        <span asp-validation-for="RefusedReason" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="RefusedObservation" class="control-label"></label>
+                        <input asp-for="RefusedObservation" class="form-control" />
+                        <span asp-validation-for="RefusedObservation" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <label asp-for="Comments" class="control-label"></label>
+                        <input asp-for="Comments" class="form-control" />
+                        <span asp-validation-for="Comments" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DateAnswer" class="control-label"></label>
+                        <input asp-for="DateAnswer" class="form-control" />
+                        <span asp-validation-for="DateAnswer" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="OffertStatus" class="control-label"></label>
+                        <input asp-for="OffertStatus" class="form-control" />
+                        <span asp-validation-for="OffertStatus" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EmploymentDate" class="control-label"></label>
+                        <input asp-for="EmploymentDate" class="form-control" />
+                        <span asp-validation-for="EmploymentDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddedBy" class="control-label"></label>
+                        <input asp-for="AddedBy" class="form-control" />
+                        <span asp-validation-for="AddedBy" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddedAt" class="control-label"></label>
+                        <input asp-for="AddedAt" class="form-control" />
+                        <span asp-validation-for="AddedAt" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UpdatedBy" class="control-label"></label>
+                        <input asp-for="UpdatedBy" class="form-control" />
+                        <span asp-validation-for="UpdatedBy" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UpdatedAt" class="control-label"></label>
+                        <input asp-for="UpdatedAt" class="form-control" />
+                        <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+                    </div>
+                </div>
+                  
+               
+                </div>
+</form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,178 @@
+﻿@model ReflectionIT.Mvc.Paging.PagingList<HR.Models.Multi>
+@using ReflectionIT.Mvc.Paging
+@addTagHelper *, ReflectionIT.Mvc.Paging
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Interviews </h2>
+
+
+<input type="button" value="Add Interview" class="btn btn-success text-white" onclick="location.href='@Url.Action("Interview", "InterviewCvs", null)'" />
+
+<input type="button" value="Add Employee" class="btn btn-success text-white" onclick="location.href='@Url.Action("Index", "Employees")'" />
+
+<br />
+
+<form method="get" class="form-inline">
+    <input name="filter" class="form-control" placeholder=""
+           value="@Model.RouteValue["Filter"]" />
+    <button type="submit" class="btn btn-info">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+    </button>
+    <br />
+    <a asp-action="Index">     Get All Interviews</a>
+</form>
+
+
+<div class="text-right">
+    <form method="post" asp-controller="InterviewCvs" asp-action="ExportToExcel">
+        <input type="submit" value="Export To Excel" />
+    </form>
+</div>
+
+
+
+
+        <html>
+
+        <body>
+
+            <div class="" style="width:40%;margin-top:2%">
+
+                <table class="table table-bordered ">
+                    <thead class="thead-dark">
+                        <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Id, this.Model)</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Name, this.Model)</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Data interviului</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Post</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Departament</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Participanti interviu</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Acceptat</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Rezultat testare</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Refuzat in urma testului</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Data comunicare raspuns</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Status oferta</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Data angajarii</b></th>
+                            <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Actions</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="row_@item.Id" style=" border: 2px solid #999">
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Id</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Name</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.InterviewDate</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.FunctionApply</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.DepartamentApply</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmployeeName </td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Accepted</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.TestResult</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.RefusedReason</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.DateAnswer</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.OffertStatus</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmploymentDate</td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    <div class="w3-show-inline-block">
+                                        <div class="w3-bar">
+                                            
+                                            <input type="button" value="Edit" class="btn btn-info text-white" onclick="location.href='@Url.Action("Interview", "InterviewCvs", new {id=item.Id})'" />
+                                            
+                                            
+                                            <b class="btn btn-danger">
+                                                <a onclick="ConfirmDelete(@item.Id)">Delete <i class="glyphicon-trash"></i>  </a>
+                                            </b>
+                                               
+                                            
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+
+                </table>
+
+
+                <div class="modal fade" id="myModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+
+                            <div class="modal-header">
+                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                <h3 class="modal-title">Delete interview</h3>
+                            </div>
+                            <div class="modal-body">
+                                <h4>Are you sure ? You want to delete this. </h4>
+
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                                <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <input type="hidden" id="hiddenId" />
+
+            </div>
+
+        </body>
+    </html>
+
+    <nav aria-label="Suppliers navigation example">
+        <vc:pager paging-list="@Model" />
+    </nav>
+
+    <script>
+
+
+    var ConfirmDelete = function (Id) {
+
+        $("#hiddenId").val(Id);
+        $("#myModal").modal('show');
+
+    }
+
+    var DeleteEmployee = function () {
+
+        $("#loaderDiv").show();
+
+        var EmployeeId = $("#hiddenId").val();
+
+        $.ajax({
+
+
+            /*            url: "/InterviewCvs/DeleteEmployee",*/
+            url: '@Url.Action("DeleteEmployee","InterviewCvs")/',
+            data: { EmployeeId: EmployeeId },
+            success: function (result) {
+                $("#loaderDiv").hide();
+                $("#myModal").modal("hide");
+                $("#row_" + EmployeeId).remove();
+
+            },
+            error: function (result) {
+                console.log(result
+                )
+            }
+
+        })
+
+    }
+    </script>
+
+
+
+
+    <input type="button" value="Back" onclick="location.href='@Url.Action("Index", "Home")'" />
