@@ -150,7 +150,7 @@ namespace HR.Controllers
 
                 return View(a);
             }
-
+            ViewData["OffertStatus"] = new SelectList(_context.Auxi, "Id", "OffertStatus");
             ViewData["PersonCvid"] = new SelectList(_context.PersonCv, "Id", "Name");
             ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "EmployeeName");
             ViewData["InterviewCvid"] = new SelectList(_context.InterviewCv, "Id", "Id");
@@ -292,7 +292,9 @@ namespace HR.Controllers
                 worksheet.Cell(currentRow, 8).Value = "TestResult";
                 worksheet.Cell(currentRow, 9).Value = "RefusedReason";
                 worksheet.Cell(currentRow, 10).Value = "DateAnswer";
+               
                 worksheet.Cell(currentRow, 11).Value = "OffertStatus";
+
                 worksheet.Cell(currentRow, 12).Value = "EmploymentDate";
 
                 foreach (var x in multitable)
@@ -308,8 +310,15 @@ namespace HR.Controllers
                     worksheet.Cell(currentRow, 8).Value = x.TestResult;
                     worksheet.Cell(currentRow, 9).Value = x.RefusedReason;
                     worksheet.Cell(currentRow, 10).Value = x.DateAnswer;
-                    worksheet.Cell(currentRow, 11).Value = x.OffertStatus;
-                    worksheet.Cell(currentRow, 12).Value = x.EmploymentDate;
+
+                    if (x.OffertStatus == 1)
+                    {
+                        worksheet.Cell(currentRow, 11).Value = "Offered";
+                    }
+                    else worksheet.Cell(currentRow, 11).Value = "Signed";
+
+
+                    worksheet.Cell(currentRow, 12).Value = Convert.ToString(x.EmploymentDate);
                 }
                 using (var stream = new MemoryStream())
                 {

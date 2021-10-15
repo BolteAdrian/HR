@@ -40,7 +40,7 @@ namespace HR
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<modelContext>();
 
-          
+
             services.AddIdentity<IdentityUser, IdentityRole>()
                .AddDefaultTokenProviders()
                .AddDefaultUI()
@@ -53,11 +53,11 @@ namespace HR
 
             services.AddMvc();
 
-                 services.AddPaging(options => {
-                     options.ViewName = "Bootstrap4";
-                     options.HtmlIndicatorDown = " <span>&darr;</span>";
-                     options.HtmlIndicatorUp = " <span>&uarr;</span>";
-                 });
+            services.AddPaging(options => {
+                options.ViewName = "Bootstrap4";
+                options.HtmlIndicatorDown = " <span>&darr;</span>";
+                options.HtmlIndicatorUp = " <span>&uarr;</span>";
+            });
 
 
         }

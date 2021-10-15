@@ -63,35 +63,50 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr id="row_@item.Id" style=" border: 2px solid #999">
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Id</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Name</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.InterviewDate</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.FunctionApply</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.DepartamentApply</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmployeeName </td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Accepted</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.TestResult</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.RefusedReason</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.DateAnswer</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.OffertStatus</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmploymentDate</td>
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                    <div class="w3-show-inline-block">
-                                        <div class="w3-bar">
-                                            
-                                            <input type="button" value="Edit" class="btn btn-info text-white" onclick="location.href='@Url.Action("Interview", "InterviewCvs", new {id=item.Id})'" />
-                                            
-                                            
-                                            <b class="btn btn-danger">
-                                                <a onclick="ConfirmDelete(@item.Id)">Delete <i class="glyphicon-trash"></i>  </a>
-                                            </b>
-                                               
-                                            
-                                        </div>
-                                    </div>
+                        <tr id="row_@item.Id" style=" border: 2px solid #999">
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Id</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Name</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.InterviewDate</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.FunctionApply</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.DepartamentApply</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmployeeName </td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Accepted</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.TestResult</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.RefusedReason</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.DateAnswer</td>
+
+
+                            @if (item.OffertStatus == 1)
+                            {
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">Offered
                                 </td>
-                            </tr>
+                            }
+                            else
+                            {
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    Signed
+                                </td>
+                            }
+                           
+
+
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmploymentDate</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                <div class="w3-show-inline-block">
+                                    <div class="w3-bar">
+
+                                        <input type="button" value="Edit" class="btn btn-info text-white" onclick="location.href='@Url.Action("Interview", "InterviewCvs", new {id=item.Id})'" />
+
+
+                                        <b class="btn btn-danger">
+                                            <a onclick="ConfirmDelete(@item.Id)">Delete <i class="glyphicon-trash"></i>  </a>
+                                        </b>
+
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                         }
                     </tbody>
 

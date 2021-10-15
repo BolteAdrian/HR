@@ -24,7 +24,8 @@ namespace HR.Models
             public DateTime? InterviewDate { get; set; }
             [Required]
             public string FunctionApply { get; set; }
-            public string DepartamentApply { get; set; }
+        public string FunctionMatch { get; set; }
+        public string DepartamentApply { get; set; }
             [Required]
             public bool? Accepted { get; set; }
             [Required]
@@ -68,7 +69,9 @@ namespace HR.Models
         public DateTime? DateAdded { get; set; }
         public string Observation { get; set; }
 
+        //AUX
 
+        public string ModeApplyAX { get; set; }
 
 
     }

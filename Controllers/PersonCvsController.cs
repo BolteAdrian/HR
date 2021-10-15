@@ -36,7 +36,7 @@ namespace HR.Controllers
             List<PersonCv> pers = await _context.PersonCv.AsNoTracking().OrderBy(p => p.Id).ToListAsync();
 
 
-
+            
             var qry = _context.PersonCv.AsNoTracking().OrderBy(p => p.Id)
                 .AsQueryable();
 
@@ -133,20 +133,29 @@ namespace HR.Controllers
                 worksheet.Cell(currentRow, 7).Value = "CountyAddress";
                 worksheet.Cell(currentRow, 8).Value = "CityAddress";
                 worksheet.Cell(currentRow, 9).Value = "BirthDate";
-
+                worksheet.Cell(currentRow, 10).Value = "Status";
 
                 foreach (var x in _context.PersonCv)
-                {
+                { 
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = x.Id;
                     worksheet.Cell(currentRow, 2).Value = x.Name;
-                    worksheet.Cell(currentRow, 3).Value = x.DateApply;
+                    worksheet.Cell(currentRow, 3).Value = Convert.ToString(x.DateApply);
                     worksheet.Cell(currentRow, 4).Value = x.FunctionApply;
                     worksheet.Cell(currentRow, 5).Value = x.Observation;
-                    worksheet.Cell(currentRow, 6).Value = x.ModeApply;
+                    if (x.ModeApply == 1)
+                    {
+                        worksheet.Cell(currentRow, 6).Value = "Email";
+                    }
+                    else worksheet.Cell(currentRow, 6).Value = "Paper";
+
+                    var dateTimeNow = (DateTime)x.BirthDate;
+                    var dateOnlyString = dateTimeNow.ToShortDateString();
+
                     worksheet.Cell(currentRow, 7).Value = x.CountyAddress;
                     worksheet.Cell(currentRow, 8).Value = x.CityAddress;
-                    worksheet.Cell(currentRow, 9).Value = x.BirthDate;
+                    worksheet.Cell(currentRow, 9).Value = Convert.ToString(dateOnlyString);
+                    worksheet.Cell(currentRow, 10).Value = x.Status;
 
                 }
                 using (var stream = new MemoryStream())
@@ -358,6 +367,8 @@ namespace HR.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
+            ViewData["ModeApply"] = new SelectList(_context.Auxi, "Id", "ModeApply");
+            
             return View();
         }
 
@@ -375,25 +386,38 @@ namespace HR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,DateApply,FunctionApply,Observation,ModeApply,CountyAddress,CityAddress,BirthDate")] MultiTable m)
+        public async Task<IActionResult> Create([Bind("Id,Name,DateApply,FunctionApply,Observation,ModeApply,CountyAddress,CityAddress,BirthDate")] PersonCv m)
         {
 
             List<long> Tablou = _context.PersonCv
 .Select(u => u.Id)
 .ToList();
             int aux2 = ((int)Tablou.LastOrDefault() + 1);
+
+           
             using (var transaction = _context.Database.BeginTransaction())
             {
+
+
+                DateTime dt = (DateTime)m.BirthDate;
+                
+
                 PersonCv personCv = new PersonCv();
                 personCv.Id = aux2;
                 personCv.Name = m.Name;
                 personCv.DateApply = m.DateApply;
                 personCv.FunctionApply = m.FunctionApply;
+                personCv.FunctionMatch = m.FunctionMatch;
                 personCv.Observation = m.Observation;
                 personCv.ModeApply = m.ModeApply;
                 personCv.CountyAddress = m.CountyAddress;
                 personCv.CityAddress = m.CityAddress;
-                personCv.BirthDate = m.BirthDate;
+                personCv.BirthDate = dt.Date;
+                personCv.Status = m.Status;
+
+
+
+
                 _context.PersonCv.AddRange(personCv);
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CV.PersonCV ON;");
                 await _context.SaveChangesAsync();

@@ -20,6 +20,8 @@ namespace HR.Models
         {
         }
 
+
+        public virtual DbSet<Auxi> Auxi { get; set; }
         public virtual DbSet<Auxiliary> Auxiliary { get; set; }
         public virtual DbSet<Documents> Documents { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
@@ -32,7 +34,7 @@ namespace HR.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=ADRIAN;Database=model;Trusted_Connection=True;");
             }
         }
@@ -40,6 +42,37 @@ namespace HR.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Auxi>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Department)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FunctionCv)
+                    .HasColumnName("FunctionCV")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModeApply)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OffertStatus)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RefusedReason)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Auxiliary>(entity =>
             {
                 entity.HasKey(e => e.Id)

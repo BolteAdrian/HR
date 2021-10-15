@@ -24,6 +24,7 @@ namespace HR.Models
         public InterviewCv IPersonCvid { get; set; }
         public InterviewCv InterviewDate { get; set; }
         public  InterviewCv FunctionApply { get; set; }
+        public InterviewCv FunctionMatch { get; set; }
         public InterviewCv DepartamentApply { get; set; }
         public InterviewCv Accepted { get; set; }
         public InterviewCv TestResult { get; set; }
