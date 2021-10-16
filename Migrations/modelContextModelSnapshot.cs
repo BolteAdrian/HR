@@ -15,9 +15,50 @@ namespace HR.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.17")
+                .HasAnnotation("ProductVersion", "3.1.19")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("HR.Models.Auxi", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Department")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("FunctionCv")
+                        .HasColumnName("FunctionCV")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("ModeApply")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("OffertStatus")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("RefusedReason")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Status")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Auxi");
+                });
 
             modelBuilder.Entity("HR.Models.Auxiliary", b =>
                 {
@@ -241,7 +282,9 @@ namespace HR.Migrations
             modelBuilder.Entity("HR.Models.PersonCv", b =>
                 {
                     b.Property<long>("Id")
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime?>("AddedAt")
                         .HasColumnType("datetime");
@@ -449,12 +492,10 @@ namespace HR.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -491,12 +532,10 @@ namespace HR.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");

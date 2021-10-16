@@ -35,7 +35,7 @@ namespace HR.Controllers
             bool result = false;
 
 
-            List<InterviewCv> s1 = _context.InterviewCv.Where(x => x.PersonCvid == EmployeeId).ToList();
+            List<InterviewCv> s1 = _context.InterviewCv.Where(x => x.Id == EmployeeId).ToList();
             foreach (var item in s1)
             {
                 List<InterviewTeam> s2 = _context.InterviewTeam.Where(x => x.InterviewCvid == item.Id).ToList();
@@ -172,8 +172,18 @@ namespace HR.Controllers
                 //Insert
                 if (id == 0)
                 {
-                    InterviewCv i = new InterviewCv();
 
+                List<long> Tablou = _context.InterviewCv
+.Select(u => u.Id)
+.ToList();
+                int aux2 = ((int)Tablou.LastOrDefault() + 1);
+
+
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+
+                    InterviewCv i = new InterviewCv();
+                    i.Id = aux2;
                     i.PersonCvid = obj.PersonCvid;
                     i.InterviewDate = obj.InterviewDate;
                     i.FunctionApply = obj.FunctionApply;
@@ -190,15 +200,26 @@ namespace HR.Controllers
                     i.AddedAt = obj.AddedAt;
                     i.UpdatedBy = obj.UpdatedBy;
                     i.UpdatedAt = obj.UpdatedBy;
-                    _context.InterviewCv.Add(i);
-                    await _context.SaveChangesAsync();
+                    
 
-                    InterviewTeam t = new InterviewTeam();
+                    _context.InterviewCv.AddRange(i);
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CV.InterviewCV ON;");
+                    await _context.SaveChangesAsync();
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CV.InterviewCV OFF;");
+                    transaction.Commit();
+                }
+
+
+
+                InterviewTeam t = new InterviewTeam();
 
                     t.EmployeeId = obj.EmployeeId ?? 0;
-                    t.InterviewCvid = i.Id;
+                t.InterviewCvid = aux2;
                     _context.InterviewTeam.Add(t);
                     await _context.SaveChangesAsync();
+
+
+
 
                 }
                 //Update
