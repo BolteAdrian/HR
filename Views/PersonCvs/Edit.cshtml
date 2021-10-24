@@ -47,7 +47,8 @@
                 <div class="col-xl-6">
                     <div class="form-group">
                         <label asp-for="ModeApply" class="control-label"></label>
-                        <input asp-for="ModeApply" class="form-control" />
+                        <select asp-for="ModeApply" class="form-control" asp-items="ViewBag.ModeApply"></select>
+
                         <span asp-validation-for="ModeApply" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -67,7 +68,8 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Status" class="control-label"></label>
-                        <input asp-for="Status" class="form-control" />
+
+                        <select asp-for="Status" class="form-control" asp-items="ViewBag.Status"></select>
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
                 </div>

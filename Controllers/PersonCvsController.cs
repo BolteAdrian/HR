@@ -31,7 +31,7 @@ namespace HR.Controllers
         [Authorize]
         // index cu search,paginare si order by name si id
         public async Task<IActionResult> Index(string filter, int page = 1,
-                                               string sortExpression = "Name")
+                                               string sortExpression = "Id")
         {
             List<PersonCv> pers = await _context.PersonCv.AsNoTracking().OrderBy(p => p.Id).ToListAsync();
 
@@ -155,7 +155,15 @@ namespace HR.Controllers
                     worksheet.Cell(currentRow, 7).Value = x.CountyAddress;
                     worksheet.Cell(currentRow, 8).Value = x.CityAddress;
                     worksheet.Cell(currentRow, 9).Value = Convert.ToString(dateOnlyString);
-                    worksheet.Cell(currentRow, 10).Value = x.Status;
+
+                   
+
+                    if (x.Status == 1)
+                    {
+                        worksheet.Cell(currentRow, 10).Value = "Active";
+                    }
+                    else worksheet.Cell(currentRow, 10).Value = "Inactive";
+
 
                 }
                 using (var stream = new MemoryStream())
@@ -228,7 +236,7 @@ namespace HR.Controllers
             return new EmptyResult();
         }
 
-
+        
         static string NumeF;
         //upload button for CV-s la creere person
 
@@ -250,6 +258,7 @@ namespace HR.Controllers
                 {
 
                     var path = Path.Combine(@"D:\Programe\New folder\htdocs\CV-uri\", aux3.ToString());
+                    
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
 
@@ -293,7 +302,7 @@ namespace HR.Controllers
 
             // Files to be deleted    
             string authorsFile = s.DocumentName;
-
+            rootFolder += s.Id;
             try
             {
                 // Check if file exists with its full path    
@@ -368,7 +377,7 @@ namespace HR.Controllers
         public IActionResult Create()
         {
             ViewData["ModeApply"] = new SelectList(_context.Auxi, "Id", "ModeApply");
-            
+            ViewData["Status"] = new SelectList(_context.Auxi, "Id", "Status");
             return View();
         }
 
@@ -386,7 +395,7 @@ namespace HR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,DateApply,FunctionApply,Observation,ModeApply,CountyAddress,CityAddress,BirthDate")] PersonCv m)
+        public async Task<IActionResult> Create([Bind("Id,Name,DateApply,FunctionApply,FunctionMatch,Observation,ModeApply,CountyAddress,CityAddress,BirthDate")] PersonCv m)
         {
 
             List<long> Tablou = _context.PersonCv
@@ -451,6 +460,8 @@ return RedirectToAction(nameof(Index));
         // GET: PersonCvs/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
+            ViewData["ModeApply"] = new SelectList(_context.Auxi, "Id", "ModeApply");
+            ViewData["Status"] = new SelectList(_context.Auxi, "Id", "Status");
             if (id == null)
             {
                 return NotFound();

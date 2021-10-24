@@ -8,7 +8,7 @@
     ViewBag.Title = "Index";
 
 }
-<h1>Participanti interviu </h1>
+<h1>Employees </h1>
 
 <a onclick="showInPopup('@Url.Action("AddOrEdit","Employees",null,Context.Request.Scheme)','New Employees')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Employee</a>
 
@@ -21,6 +21,12 @@
     <br />
     <a asp-action="Index">     Get All Interviews</a>
 </form>
+
+<div class="text-right">
+    <form method="post" asp-controller="Employees" asp-action="ExportToExcel">
+        <input type="submit" value="Export To Excel" />
+    </form>
+</div>
 
 
 <div class="" style="width:40%;margin-top:2%">
@@ -54,34 +60,45 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr id="row_@item.Id" style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.DisplayFor(modelItem => item.EmployeeId)
-                    </td>
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.DisplayFor(modelItem => item.EmployeeName)
-                    </td>
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.DisplayFor(modelItem => item.OrganizationId)
-                    </td>
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.DisplayFor(modelItem => item.EmploymentDate)
-                    </td>
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.DisplayFor(modelItem => item.Team)
-                    </td>
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.DisplayFor(modelItem => item.CompanyShortName)
-                    </td>
+            <tr id="row_@item.Id" style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.EmployeeId)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.EmployeeName)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.OrganizationId)
+                </td>
 
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        <a onclick="showInPopup('@Url.Action("AddOrEdit","Employees",new {id=item.Id},Context.Request.Scheme)','Update Employees')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
-                        <b class="btn btn-danger"><a onclick="ConfirmDelete(@item.Id)" > Delete</a></b>
-                    </td>
-                </tr>
+                @{
+
+
+                    var dateTimeNow = (DateTime)item.EmploymentDate;
+                    var dateOnlyString = dateTimeNow.ToShortDateString();
+                }
+
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    @Html.DisplayFor(modelItem => dateOnlyString)
+                </td>
+
+
+            
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.Team)
+                </td>
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.CompanyShortName)
+                </td>
+
+                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                    <a onclick="showInPopup('@Url.Action("AddOrEdit","Employees",new {id=item.Id},Context.Request.Scheme)','Update Employees')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                    <b class="btn btn-danger"><a onclick="ConfirmDelete(@item.Id)"> Delete</a></b>
+                </td>
+            </tr>
             }
         </tbody>
     </table>

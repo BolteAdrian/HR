@@ -357,7 +357,7 @@ namespace HR.Controllers
         [Authorize]
         //index cu paginare search si order
         public async Task<IActionResult> Index(string filter, int page = 1,
-                                               string sortExpression = "Name")
+                                               string sortExpression = "Id")
         {
             List<Multi> _multitable = await _context.Multi.AsNoTracking().OrderBy(p => p.Id).ToListAsync();
 

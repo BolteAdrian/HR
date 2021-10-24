@@ -10,6 +10,8 @@ using HR.Models;
 using ReflectionIT.Mvc.Paging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Routing;
+using ClosedXML.Excel;
+using System.IO;
 
 namespace HR_CV.Controllers
 {
@@ -25,13 +27,13 @@ namespace HR_CV.Controllers
     
         // index cu search,paginare si order by name si id
         public async Task<IActionResult> Index(string filter, int page = 1,
-                                              string sortExpression = "EmployeeName")
+                                              string sortExpression = "EmployeeId")
         {
             List<Multi> _multitable = await _context.Multi.AsNoTracking().OrderBy(p => p.Id).ToListAsync();
 
 
 
-            var qry = _context.Employee.AsNoTracking().Where(x => x.IsActive > 0).OrderBy(p => p.Id)
+            var qry = _context.Employee.AsNoTracking().OrderBy(p => p.Id)
                 .AsQueryable();
 
 
@@ -76,15 +78,38 @@ namespace HR_CV.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddOrEdit(int id, [Bind("Id,EmployeeId,EmployeeName,OrganizationId,CorId,EmploymentDate,EndDate,IsActive,Email,UserName,Plant,Team,CompanyShortName")] Employee employee)
+        public async Task<IActionResult> AddOrEdit(int id, [Bind("Id,EmployeeId,EmployeeName,OrganizationId,EmploymentDate,Email,Team,CompanyShortName")] Employee employee)
         {
             if (ModelState.IsValid)
             {
                 //Insert
                 if (id == 0)
                 {
-                    _context.Add(employee);
-                    await _context.SaveChangesAsync();
+                    List<int> Tablou = _context.Employee
+.Select(u => u.Id)
+.ToList();
+                    int aux2 = ((int)Tablou.LastOrDefault() + 1);
+                    
+
+                        Employee e = new Employee();
+                        e.Id = aux2;
+                        e.EmployeeId = employee.EmployeeId;
+                        e.EmployeeName = employee.EmployeeName;
+                        e.EmploymentDate = employee.EmploymentDate;
+                        e.OrganizationId = employee.OrganizationId;
+                        e.EmploymentDate = employee.EmploymentDate;
+                        e.Email = employee.Email;
+                        e.Team = employee.Team;
+                        e.CompanyShortName = employee.CompanyShortName;
+                        e.IsActive = 1;
+                        e.Plant = 1;
+
+
+                        _context.Employee.AddRange(e);
+                       
+                        await _context.SaveChangesAsync();
+                       
+                      
 
 
                 }
@@ -118,10 +143,75 @@ namespace HR_CV.Controllers
 
 
 
+        //export button
+        
+        [Authorize(Roles = "Admin")]
+        public IActionResult ExportToExcel()
+        {
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Employees");
+                var currentRow = 1;
+                worksheet.Cell(currentRow, 1).Value = "Id";
+                worksheet.Cell(currentRow, 2).Value = "EmployeeId";
+                worksheet.Cell(currentRow, 3).Value = "EmployeeName";
+                worksheet.Cell(currentRow, 4).Value = "OrganizationId";
+                worksheet.Cell(currentRow, 5).Value = "EmploymentDate";
+                worksheet.Cell(currentRow, 6).Value = "Email";
+                worksheet.Cell(currentRow, 7).Value = "Team";
+                worksheet.Cell(currentRow, 8).Value = "CompanyShortName";
+                
+
+                foreach (var x in _context.Employee)
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).Value = x.Id;
+                    worksheet.Cell(currentRow, 2).Value = x.EmployeeId;
+                    worksheet.Cell(currentRow, 3).Value = x.EmployeeName;
+                    worksheet.Cell(currentRow, 4).Value = x.OrganizationId;
+                    var dateTimeNow = (DateTime)x.EmploymentDate;
+                    var dateOnlyString = dateTimeNow.ToShortDateString();
+                    worksheet.Cell(currentRow, 5).Value = Convert.ToString(dateOnlyString);
+
+
+                    worksheet.Cell(currentRow, 6).Value = x.Email;
+                    worksheet.Cell(currentRow, 7).Value = x.Team;
+                    worksheet.Cell(currentRow, 8).Value = x.CompanyShortName;
+
+
+
+                }
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Employees.xlsx");
+                }
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         // GET: Employees/Details/5
-        
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -162,6 +252,10 @@ namespace HR_CV.Controllers
             }
             return View(employee);
         }
+
+
+
+
 
         // GET: Employees/Edit/5
         [Authorize(Roles = "Admin")]
@@ -228,8 +322,8 @@ namespace HR_CV.Controllers
             Employee employee = _context.Employee.Where(x => x.Id == EmployeeId).SingleOrDefault();
             try
             {
-                employee.IsActive = 0;
-                _context.Update(employee);
+
+                _context.Employee.Remove(employee);
                 _context.SaveChanges();
             }
             catch { }
