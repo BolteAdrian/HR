@@ -376,13 +376,18 @@ namespace HR.Controllers
                   
                     worksheet.Cell(currentRow, 10).Value = Convert.ToString(dateOnlyString);
 
+                    if (x.EmploymentDate != null)
+                    {
+                        var dateTimeNow2 = (DateTime)x.EmploymentDate;
+                        var dateOnlyString2 = dateTimeNow.ToShortDateString();
 
-                    var dateTimeNow2 = (DateTime)x.EmploymentDate;
-                    var dateOnlyString2 = dateTimeNow.ToShortDateString();
- 
 
-                    worksheet.Cell(currentRow, 12).Value = Convert.ToString(dateOnlyString2);
+                        worksheet.Cell(currentRow, 12).Value = Convert.ToString(dateOnlyString2);
+                    }
+                    else worksheet.Cell(currentRow, 12).Value = "-";
                 }
+
+
                 using (var stream = new MemoryStream())
                 {
                     workbook.SaveAs(stream);
