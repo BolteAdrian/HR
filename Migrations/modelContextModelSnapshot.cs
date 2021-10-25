@@ -24,6 +24,11 @@ namespace HR.Migrations
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Accepted")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
                     b.Property<string>("Department")
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
@@ -60,44 +65,6 @@ namespace HR.Migrations
                     b.ToTable("Auxi");
                 });
 
-            modelBuilder.Entity("HR.Models.Auxiliary", b =>
-                {
-                    b.Property<short>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("varchar(2)")
-                        .HasMaxLength(2)
-                        .IsUnicode(false);
-
-                    b.Property<string>("ParameterKey")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<string>("ParameterName")
-                        .IsRequired()
-                        .HasColumnType("varchar(20)")
-                        .HasMaxLength(20)
-                        .IsUnicode(false);
-
-                    b.Property<string>("ParameterValue")
-                        .IsRequired()
-                        .HasColumnType("varchar(300)")
-                        .HasMaxLength(300)
-                        .IsUnicode(false);
-
-                    b.HasKey("Id")
-                        .HasName("PK_Auxiliary13")
-                        .HasAnnotation("SqlServer:Clustered", false);
-
-                    b.ToTable("Auxiliary","matrix");
-                });
-
             modelBuilder.Entity("HR.Models.Documents", b =>
                 {
                     b.Property<long>("Id")
@@ -132,6 +99,7 @@ namespace HR.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CompanyShortName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(10)")
                         .HasMaxLength(10);
 
@@ -139,19 +107,23 @@ namespace HR.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnName("EMail")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
                     b.Property<int?>("EmployeeId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("EmployeeName")
+                        .IsRequired()
                         .HasColumnType("varchar(150)")
                         .HasMaxLength(150)
                         .IsUnicode(false);
 
                     b.Property<DateTime?>("EmploymentDate")
+                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("EndDate")
@@ -167,6 +139,7 @@ namespace HR.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Team")
+                        .IsRequired()
                         .HasColumnType("varchar(200)")
                         .HasMaxLength(200)
                         .IsUnicode(false);
@@ -193,6 +166,7 @@ namespace HR.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool?>("Accepted")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("AddedAt")
@@ -210,6 +184,7 @@ namespace HR.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("DepartamentApply")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
@@ -217,10 +192,12 @@ namespace HR.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("FunctionApply")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
                     b.Property<DateTime?>("InterviewDate")
+                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<int?>("OffertStatus")
@@ -238,6 +215,7 @@ namespace HR.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("TestResult")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
@@ -297,13 +275,16 @@ namespace HR.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("BirthDate")
+                        .IsRequired()
                         .HasColumnType("date");
 
                     b.Property<string>("CityAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
                     b.Property<string>("CountyAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
@@ -312,9 +293,11 @@ namespace HR.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("DateApply")
+                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<string>("FunctionApply")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
@@ -323,6 +306,7 @@ namespace HR.Migrations
                         .HasMaxLength(100);
 
                     b.Property<int?>("ModeApply")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Name")

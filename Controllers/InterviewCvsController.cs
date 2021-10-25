@@ -115,26 +115,30 @@ namespace HR.Controllers
             
                 if (id != 0)
             {
-
+                
                 var a = new MultiTable();
                 InterviewCv i = _context.InterviewCv.Where(x => x.Id == id).FirstOrDefault();
+
+
                 a.Id = i.Id;
                 a.PersonCvid = i.PersonCvid;
                 a.InterviewDate = i.InterviewDate;
                 a.FunctionApply = i.FunctionApply;
                 a.DepartamentApply = i.DepartamentApply;
-                a.Accepted = i.Accepted;
+                if (a.Accepted == 1)
+                {
+                    a.Accepted = 1;
+                }
+                else a.Accepted = 0;
+
                 a.TestResult = i.TestResult;
-                a.RefusedReason = i.RefusedReason;
-                a.RefusedObservation = i.RefusedObservation;
+                //a.RefusedReason = i.RefusedReason;
+                
                 a.Comments = i.Comments;
                 a.DateAnswer = i.DateAnswer;
                 a.OffertStatus = i.OffertStatus;
                 a.EmploymentDate = i.EmploymentDate;
-                a.AddedBy = i.AddedBy;
-                a.AddedAt = i.AddedAt;
-                a.UpdatedBy = i.UpdatedBy;
-                a.UpdatedAt = i.UpdatedAt;
+                
 
 
                 InterviewTeam t = _context.InterviewTeam.Where(x => x.InterviewCvid == id).FirstOrDefault();
@@ -143,13 +147,18 @@ namespace HR.Controllers
                 a.InterviewCvid = t.InterviewCvid;
 
 
-
+                ViewData["RefusedReason"] = new SelectList(_context.Auxi, "Id", "RefusedReason");
+                ViewData["Accepted"] = new SelectList(_context.Auxi, "Id", "Accepted");
+                ViewData["OffertStatus"] = new SelectList(_context.Auxi, "Id", "OffertStatus");
                 ViewData["PersonCvid"] = new SelectList(_context.PersonCv, "Id", "Name");
-                ViewData["EmployeeId"] = new SelectList(_context.Employee, "EmployeeId", "EmployeeName");
+                ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "EmployeeName");
                 ViewData["InterviewCvid"] = new SelectList(_context.InterviewCv, "Id", "Id");
 
                 return View(a);
             }
+           // ViewData["FunctionApply"] = new SelectList(_context.PersonCv, "Id", "FunctionApply");
+            ViewData["RefusedReason"] = new SelectList(_context.Auxi, "Id", "RefusedReason");
+            ViewData["Accepted"] = new SelectList(_context.Auxi, "Id", "Accepted");
             ViewData["OffertStatus"] = new SelectList(_context.Auxi, "Id", "OffertStatus");
             ViewData["PersonCvid"] = new SelectList(_context.PersonCv, "Id", "Name");
             ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "EmployeeName");
@@ -183,23 +192,28 @@ namespace HR.Controllers
                 {
 
                     InterviewCv i = new InterviewCv();
+
+
                     i.Id = aux2;
                     i.PersonCvid = obj.PersonCvid;
                     i.InterviewDate = obj.InterviewDate;
                     i.FunctionApply = obj.FunctionApply;
                     i.DepartamentApply = obj.DepartamentApply;
-                    i.Accepted = obj.Accepted;
+
+                    if (obj.Accepted == 1)
+                    {
+                        i.Accepted = true;
+                    }
+                    else i.Accepted = false;
+                    
                     i.TestResult = obj.TestResult;
-                    i.RefusedReason = obj.RefusedReason;
-                    i.RefusedObservation = obj.RefusedObservation;
+                    //i.RefusedReason = obj.RefusedReason;
+                   
                     i.Comments = obj.Comments;
                     i.DateAnswer = obj.DateAnswer;
                     i.OffertStatus = obj.OffertStatus;
                     i.EmploymentDate = obj.EmploymentDate;
-                    i.AddedBy = obj.AddedBy;
-                    i.AddedAt = obj.AddedAt;
-                    i.UpdatedBy = obj.UpdatedBy;
-                    i.UpdatedAt = obj.UpdatedBy;
+                   
                     
 
                     _context.InterviewCv.AddRange(i);
@@ -235,7 +249,13 @@ namespace HR.Controllers
                         i.InterviewDate = obj.InterviewDate;
                         i.FunctionApply = obj.FunctionApply;
                         i.DepartamentApply = obj.DepartamentApply;
-                        i.Accepted = obj.Accepted;
+
+                    if (obj.Accepted == 1)
+                    {
+                        i.Accepted = true;
+                    }
+                    else i.Accepted = false;
+                    
                         i.TestResult = obj.TestResult;
                         i.RefusedReason = obj.RefusedReason;
                         i.RefusedObservation = obj.RefusedObservation;
@@ -309,13 +329,12 @@ namespace HR.Controllers
                 worksheet.Cell(currentRow, 4).Value = "FunctionApply";
                 worksheet.Cell(currentRow, 5).Value = "DepartamentApply";
                 worksheet.Cell(currentRow, 6).Value = "EmployeeName";
-                worksheet.Cell(currentRow, 7).Value = "Accepted";
-                worksheet.Cell(currentRow, 8).Value = "TestResult";
-                worksheet.Cell(currentRow, 9).Value = "RefusedReason";
-                worksheet.Cell(currentRow, 10).Value = "DateAnswer";
-               
+                worksheet.Cell(currentRow, 7).Value = "TestResult";
+                worksheet.Cell(currentRow, 8).Value = "Accepted";
+                //worksheet.Cell(currentRow, 9).Value = "RefusedReason";
+                worksheet.Cell(currentRow, 9).Value = "Observation";
+                worksheet.Cell(currentRow, 10).Value = "DateAnswer";              
                 worksheet.Cell(currentRow, 11).Value = "OffertStatus";
-
                 worksheet.Cell(currentRow, 12).Value = "EmploymentDate";
 
                 foreach (var x in multitable)
@@ -327,19 +346,42 @@ namespace HR.Controllers
                     worksheet.Cell(currentRow, 4).Value = x.FunctionApply;
                     worksheet.Cell(currentRow, 5).Value = x.DepartamentApply;
                     worksheet.Cell(currentRow, 6).Value = x.EmployeeName;
-                    worksheet.Cell(currentRow, 7).Value = x.Accepted;
-                    worksheet.Cell(currentRow, 8).Value = x.TestResult;
-                    worksheet.Cell(currentRow, 9).Value = x.RefusedReason;
-                    worksheet.Cell(currentRow, 10).Value = x.DateAnswer;
+                    worksheet.Cell(currentRow, 7).Value = x.TestResult;
+                    if (x.Accepted == true)
+                    {
+                        worksheet.Cell(currentRow, 8).Value = "Yes";
+                    }
+                    else worksheet.Cell(currentRow, 8).Value = "No";
+
+                    //if (x.RefusedReason == 1)
+                    //{
+                    //    worksheet.Cell(currentRow, 9).Value = "Refused Test";
+                    //}
+                    //else if (x.RefusedReason == 2) worksheet.Cell(currentRow, 9).Value = "Refused interview";
+                    //else worksheet.Cell(currentRow, 9).Value = "-";
+
+
+                    worksheet.Cell(currentRow, 9).Value = x.Comments;
 
                     if (x.OffertStatus == 1)
                     {
-                        worksheet.Cell(currentRow, 11).Value = "Offered";
+                        worksheet.Cell(currentRow, 11).Value = "Refused";
                     }
-                    else worksheet.Cell(currentRow, 11).Value = "Signed";
+                    else  worksheet.Cell(currentRow, 11).Value = "Signed";
+                    
+
+                    var dateTimeNow = (DateTime)x.DateAnswer;
+                    var dateOnlyString = dateTimeNow.ToShortDateString();
+
+                  
+                    worksheet.Cell(currentRow, 10).Value = Convert.ToString(dateOnlyString);
 
 
-                    worksheet.Cell(currentRow, 12).Value = Convert.ToString(x.EmploymentDate);
+                    var dateTimeNow2 = (DateTime)x.EmploymentDate;
+                    var dateOnlyString2 = dateTimeNow.ToShortDateString();
+ 
+
+                    worksheet.Cell(currentRow, 12).Value = Convert.ToString(dateOnlyString2);
                 }
                 using (var stream = new MemoryStream())
                 {
@@ -404,7 +446,12 @@ namespace HR.Controllers
             {
                 return NotFound();
             }
-            ViewData["PersonCvid"] = new SelectList(_context.PersonCv, "Id", "Name", interviewCv.PersonCvid);
+            ViewData["RefusedReason"] = new SelectList(_context.Auxi, "Id", "RefusedReason");
+            ViewData["Accepted"] = new SelectList(_context.Auxi, "Id", "Accepted");
+            ViewData["OffertStatus"] = new SelectList(_context.Auxi, "Id", "OffertStatus");
+            ViewData["PersonCvid"] = new SelectList(_context.PersonCv, "Id", "Name");
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "EmployeeName");
+            ViewData["InterviewCvid"] = new SelectList(_context.InterviewCv, "Id", "Id");
             return View(interviewCv);
         }
 
@@ -440,7 +487,12 @@ namespace HR.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PersonCvid"] = new SelectList(_context.PersonCv, "Id", "Name", interviewCv.PersonCvid);
+            ViewData["RefusedReason"] = new SelectList(_context.Auxi, "Id", "RefusedReason");
+            ViewData["Accepted"] = new SelectList(_context.Auxi, "Id", "Accepted");
+            ViewData["OffertStatus"] = new SelectList(_context.Auxi, "Id", "OffertStatus");
+            ViewData["PersonCvid"] = new SelectList(_context.PersonCv, "Id", "Name");
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "EmployeeName");
+            ViewData["InterviewCvid"] = new SelectList(_context.InterviewCv, "Id", "Id");
             return View(interviewCv);
         }
 

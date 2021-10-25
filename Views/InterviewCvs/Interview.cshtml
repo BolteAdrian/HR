@@ -5,11 +5,12 @@
 }
 
 
+
 <h4>InterviewCv </h4>
 <hr />
 <div class="row">
     <div class="col">
- 
+
         <form asp-action="Interview">
             <div class="row">
                 <div class="col-xl-6">
@@ -28,6 +29,13 @@
                         <label asp-for="FunctionApply" class="control-label"></label>
                         <input asp-for="FunctionApply" class="form-control" />
                         <span asp-validation-for="FunctionApply" class="text-danger"></span>
+
+
+                        @*<label asp-for="FunctionApply" class="control-label"></label>
+                            <select asp-for="FunctionApply" class="form-control" asp-items="ViewBag.FunctionApply"></select>
+                            <span asp-validation-for="FunctionApply" class="text-danger"></span>*@
+
+
                     </div>
                     <div class="form-group">
                         <label asp-for="DepartamentApply" class="control-label"></label>
@@ -57,16 +65,26 @@
                         <span asp-validation-for="TestResult" class="text-danger"></span>
                     </div>
                     <div class="form-group">
+
                         <label asp-for="Accepted" class="control-label"></label>
-                        <input asp-for="Accepted" class="form-control" />
+                        <select asp-for="Accepted" class="form-control" asp-items="ViewBag.Accepted"></select>
+
                         <span asp-validation-for="Accepted" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="RefusedReason" class="control-label"></label>
-                        <input asp-for="RefusedReason" class="form-control" />
-                        <span asp-validation-for="RefusedReason" class="text-danger"></span>
-                    </div>
 
+                    @*<div class="form-group">
+
+                            <label asp-for="RefusedReason" class="control-label"></label>
+                            <select asp-for="RefusedReason" class="form-control" asp-items="ViewBag.RefusedReason"></select>
+
+                            <span asp-validation-for="RefusedReason" class="text-danger"></span>
+                        </div>*@
+
+                    <div class="form-group">
+                        <label asp-for="Comments" class="control-label"></label>
+                        <input asp-for="Comments" class="form-control" />
+                        <span asp-validation-for="Comments" class="text-danger"></span>
+                    </div>
 
 
                     <div class="form-group">
@@ -86,15 +104,15 @@
 
 
                 </div>
-               
-                
-               
+
+
+
 
 
 
             </div>
-</form>
-        </div>
+        </form>
     </div>
+</div>
 
 <input type="button" value="Back" onclick="location.href='@Url.Action("Index", "InterviewCvs")'" />

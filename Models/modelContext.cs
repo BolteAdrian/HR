@@ -21,8 +21,8 @@ namespace HR.Models
         }
 
 
+     
         public virtual DbSet<Auxi> Auxi { get; set; }
-        public virtual DbSet<Auxiliary> Auxiliary { get; set; }
         public virtual DbSet<Documents> Documents { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
         public virtual DbSet<InterviewCv> InterviewCv { get; set; }
@@ -42,10 +42,15 @@ namespace HR.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+          
 
             modelBuilder.Entity<Auxi>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Accepted)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Department)
                     .HasMaxLength(50)
@@ -70,35 +75,6 @@ namespace HR.Models
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<Auxiliary>(entity =>
-            {
-                entity.HasKey(e => e.Id)
-                    .HasName("PK_Auxiliary13")
-                    .IsClustered(false);
-
-                entity.ToTable("Auxiliary", "matrix");
-
-                entity.Property(e => e.Language)
-                    .IsRequired()
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ParameterKey)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ParameterName)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ParameterValue)
-                    .IsRequired()
-                    .HasMaxLength(300)
                     .IsUnicode(false);
             });
 
@@ -218,6 +194,8 @@ namespace HR.Models
                 entity.HasNoKey();
 
                 entity.ToView("Multi");
+
+                entity.Property(e => e.Comments).HasMaxLength(200);
 
                 entity.Property(e => e.DateAnswer).HasColumnType("datetime");
 

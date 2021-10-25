@@ -16,5 +16,6 @@ namespace HR.Models
         public string Status { get; set; }
         public string FunctionCv { get; set; }
         public string Department { get; set; }
+        public string Accepted { get; set; }
     }
 }

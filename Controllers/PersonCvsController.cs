@@ -147,7 +147,8 @@ namespace HR.Controllers
                     {
                         worksheet.Cell(currentRow, 6).Value = "Email";
                     }
-                    else worksheet.Cell(currentRow, 6).Value = "Paper";
+                    else  worksheet.Cell(currentRow, 6).Value = "Paper";
+                    
 
                     var dateTimeNow = (DateTime)x.BirthDate;
                     var dateOnlyString = dateTimeNow.ToShortDateString();
@@ -162,7 +163,8 @@ namespace HR.Controllers
                     {
                         worksheet.Cell(currentRow, 10).Value = "Active";
                     }
-                    else worksheet.Cell(currentRow, 10).Value = "Inactive";
+                    else  worksheet.Cell(currentRow, 10).Value = "Inactive";
+                    
 
 
                 }
