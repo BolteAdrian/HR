@@ -23,15 +23,16 @@ namespace HR.Models
         public long PersonCvid { get; set; }
         public DateTime? InterviewDate { get; set; }
        
-        public string? FunctionApply { get; set; }
-        public string? DepartamentApply { get; set; }
-        [Required]
+        public string FunctionApply { get; set; }
+        public string DepartamentApply { get; set; }
+        
         public int? Accepted { get; set; }
         [Required]
         public string? TestResult { get; set; }
         public int? RefusedReason { get; set; }
-        public string? RefusedObservation { get; set; }
-        public string? Comments { get; set; }
+        public string RefusedObservation { get; set; }
+        public string Comments { get; set; }
+        [Required]
         public DateTime? DateAnswer { get; set; }
         public int? OffertStatus { get; set; }
         [Required]

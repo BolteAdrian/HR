@@ -174,7 +174,7 @@ namespace HR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Interview(int id, [Bind("Id,PersonCvid,InterviewDate,FunctionApply,DepartamentApply,Accepted,TestResult,RefusedReason,RefusedObservation,Comments,DateAnswer,OffertStatus,EmploymentDate,AddedBy,AddedAt,UpdatedBy,UpdatedAt,InterviewCvid,EmployeeId")] MultiTable obj)
+        public async Task<IActionResult> Interview(int id, [Bind("Id,PersonCvid,InterviewDate,FunctionApply,DepartamentApply,Accepted,TestResult,RefusedReason,RefusedObservation,Comments,DateAnswer,OffertStatus,EmploymentDate,InterviewCvid,EmployeeId")] MultiTable obj)
         {
            
 
