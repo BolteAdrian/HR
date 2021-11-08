@@ -119,7 +119,8 @@
              .OnClick(
 				@<text>
 					 function(e) {
-         window.open( "http://127.0.0.1/CV-uri/" + @Model.Id,'_blank');
+
+         window.open( "http://127.0.0.1/CV-uri/" +@Model.Id+"/"+e.row.data.DocumentName,'_blank');
         }
 				</text>
             );
