@@ -73,22 +73,22 @@
 
 
 
-                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.FunctionApply</td>
-                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.DepartamentApply</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.NameFunction</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.NameDepartment</td>
                             <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmployeeName </td>
                             <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.TestResult</td>
 
 
-                            @if (item.Accepted == true)
+                            @if (item.Accepted == false)
                             {
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                    Yes
-                                </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            No
+                        </td>
                             }
                             else
                             {
                                 <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                    No
+                                    Yes
                                 </td>
                             }
 
@@ -124,7 +124,7 @@
 
 
 
-                            @if (item.OffertStatus == 1)
+                            @if (item.OffertStatus == 2)
                             {
                         <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
                             Refused
@@ -132,9 +132,9 @@
                             }
                             else 
                             {
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                    Signed
-                                </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            Signed
+                        </td>
                             }
                  
 

@@ -94,28 +94,56 @@
                 <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
                     @Html.DisplayFor(modelItem => item.DateApply)
                 </td>
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayFor(modelItem => item.FunctionApply)
-                </td>
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayFor(modelItem => item.FunctionMatch)
-                </td>
+
+
+
+                @foreach (var f in (List<Functions>)ViewBag.FunctionApply)
+                {
+                    @if (item.FunctionApply == f.Id)
+                    {
+
+
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @f.NameFunction
+                        </td>
+                    }
+                }
+
+
+
+                @foreach (var f in (List<Functions>)ViewBag.FunctionMatch)
+                {
+                    @if (item.FunctionMatch == f.Id)
+                    {
+
+
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @f.NameFunction
+                        </td>
+                    }
+                }
+
+
+
+
+
+
 
                 <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
                     @Html.DisplayFor(modelItem => item.Observation)
                 </td>
 
-                @if (item.ModeApply == 1)
+                @if (item.ModeApply == 2)
                 {
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                        Email
-                    </td>
+            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                Paper 
+            </td>
                 }
                 else
                 {
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                        Paper
-                    </td>
+            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                Email
+            </td>
                 }
 
 
@@ -136,17 +164,17 @@
                     @Html.DisplayFor(modelItem => dateOnlyString)
                 </td>
 
-                @if (item.Status == 1)
+                @if (item.Status == 2)
                 {
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                        Active
-                    </td>
+            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                Inactive
+            </td>
                 }
                 else
                 {
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                        Inactive
-                    </td>
+            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                Active
+            </td>
                 }
 
                 <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">

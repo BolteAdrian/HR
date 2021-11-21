@@ -12,7 +12,6 @@ namespace HR.Models
     {
         public PersonCv()
         {
-            Documents = new HashSet<Documents>();
             InterviewCv = new HashSet<InterviewCv>();
         }
 
@@ -21,15 +20,15 @@ namespace HR.Models
         public string Name { get; set; }
         [Required]
         public DateTime? DateApply { get; set; }
-        [Required]
-        public string FunctionApply { get; set; }
-        public string FunctionMatch { get; set; }
+        public long? FunctionApply { get; set; }
+        public long? FunctionMatch { get; set; }
         public string Observation { get; set; }
         public int? ModeApply { get; set; }
         [Required]
         public string CountyAddress { get; set; }
         [Required]
         public string CityAddress { get; set; }
+        [Required]
         public DateTime? BirthDate { get; set; }
         public int? Age { get; set; }
         public string AddedBy { get; set; }
@@ -39,7 +38,6 @@ namespace HR.Models
         public int? Status { get; set; }
         public DateTime? CvreciveDate { get; set; }
 
-        public virtual ICollection<Documents> Documents { get; set; }
         public virtual ICollection<InterviewCv> InterviewCv { get; set; }
     }
 }

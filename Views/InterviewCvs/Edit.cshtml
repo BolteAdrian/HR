@@ -27,15 +27,13 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="FunctionApply" class="control-label"></label>
-                        <input asp-for="FunctionApply" class="form-control" />
+                        <select asp-for="FunctionApply" class="form-control" asp-items="ViewBag.FunctionApply"></select>
                         <span asp-validation-for="FunctionApply" class="text-danger"></span>
+
+
                     </div>
-                    <div class="form-group">
-                        <label asp-for="DepartamentApply" class="control-label"></label>
-                        <input asp-for="DepartamentApply" class="form-control" />
-                        <span asp-validation-for="DepartamentApply" class="text-danger"></span>
-                    </div>
-                  
+                   
+
                     <div class="form-group">
                         <label asp-for="TestResult" class="control-label"></label>
                         <input asp-for="TestResult" class="form-control" />
@@ -46,7 +44,7 @@
                         <input asp-for="RefusedReason" class="form-control" />
                         <span asp-validation-for="RefusedReason" class="text-danger"></span>
                     </div>
-                   
+
                     <div class="form-group">
                         <input type="submit" value="Save" class="btn btn-primary" />
                     </div>

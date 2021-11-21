@@ -22,10 +22,10 @@ namespace HR.Models
         public long Id { get; set; }
         public long PersonCvid { get; set; }
         public DateTime? InterviewDate { get; set; }
-       
-        public string FunctionApply { get; set; }
-        public string DepartamentApply { get; set; }
-        
+
+        public int FunctionApply { get; set; }
+        public int DepartamentApply { get; set; }
+
         public int? Accepted { get; set; }
         [Required]
         public string? TestResult { get; set; }
@@ -35,7 +35,7 @@ namespace HR.Models
         [Required]
         public DateTime? DateAnswer { get; set; }
         public int? OffertStatus { get; set; }
-        [Required]
+       
         public DateTime? EmploymentDate { get; set; }
         public string AddedBy { get; set; }
         public DateTime? AddedAt { get; set; }
@@ -63,14 +63,18 @@ namespace HR.Models
         public string CompanyShortName { get; set; }
 
         public virtual PersonCv PersonCv { get; set; }
-        //Dcouments
+        //Documents
 
         public string DocumentName { get; set; }
         public DateTime? DateAdded { get; set; }
         public string Observation { get; set; }
 
 
+        //function
+        public string name_function { get; set; }
 
+        //department
+        public string name_department { get; set; }
 
     }
 }

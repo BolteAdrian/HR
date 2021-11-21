@@ -123,8 +123,14 @@ namespace HR.Controllers
                 a.Id = i.Id;
                 a.PersonCvid = i.PersonCvid;
                 a.InterviewDate = i.InterviewDate;
-                a.FunctionApply = i.FunctionApply;
-                a.DepartamentApply = i.DepartamentApply;
+                a.FunctionApply = (int)i.FunctionApply;
+
+                Functions f = _context.Functions.Where(x => x.Id == (int)i.FunctionApply).FirstOrDefault();
+
+                Departments dep = _context.Departments.Where(x => x.Id == f.IdDepartment).FirstOrDefault();
+
+
+                a.DepartamentApply = (int)dep.Id;
                 if (a.Accepted == 1)
                 {
                     a.Accepted = 1;
@@ -146,7 +152,8 @@ namespace HR.Controllers
                 a.EmployeeId = t.EmployeeId;//
                 a.InterviewCvid = t.InterviewCvid;
 
-
+                ViewData["DepartamentApply"] = new SelectList(_context.Departments, "Id", "NameDepartment");
+                ViewData["FunctionApply"] = new SelectList(_context.Functions, "Id", "NameFunction");
                 ViewData["RefusedReason"] = new SelectList(_context.Auxi, "Id", "RefusedReason");
                 ViewData["Accepted"] = new SelectList(_context.Auxi, "Id", "Accepted");
                 ViewData["OffertStatus"] = new SelectList(_context.Auxi, "Id", "OffertStatus");
@@ -156,7 +163,8 @@ namespace HR.Controllers
 
                 return View(a);
             }
-           // ViewData["FunctionApply"] = new SelectList(_context.PersonCv, "Id", "FunctionApply");
+            ViewData["DepartamentApply"] = new SelectList(_context.Departments, "Id", "NameDepartment");
+            ViewData["FunctionApply"] = new SelectList(_context.Functions, "Id", "NameFunction");
             ViewData["RefusedReason"] = new SelectList(_context.Auxi, "Id", "RefusedReason");
             ViewData["Accepted"] = new SelectList(_context.Auxi, "Id", "Accepted");
             ViewData["OffertStatus"] = new SelectList(_context.Auxi, "Id", "OffertStatus");
@@ -198,7 +206,15 @@ namespace HR.Controllers
                     i.PersonCvid = obj.PersonCvid;
                     i.InterviewDate = obj.InterviewDate;
                     i.FunctionApply = obj.FunctionApply;
-                    i.DepartamentApply = obj.DepartamentApply;
+
+                    Functions f = _context.Functions.Where(x => x.Id == obj.FunctionApply).FirstOrDefault();
+
+                    Departments dep = _context.Departments.Where(x => x.Id == f.IdDepartment).FirstOrDefault();
+
+
+            
+
+                    i.DepartamentApply = dep.Id;
 
                     if (obj.Accepted == 1)
                     {
@@ -220,22 +236,28 @@ namespace HR.Controllers
                     _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CV.InterviewCV ON;");
                     await _context.SaveChangesAsync();
                     _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CV.InterviewCV OFF;");
-                    transaction.Commit();
-                }
+                
 
 
 
                 InterviewTeam t = new InterviewTeam();
 
-                    t.EmployeeId = obj.EmployeeId ?? 0;
+
+                t.Id = aux2;
+                t.EmployeeId = obj.EmployeeId ?? 0;
                 t.InterviewCvid = aux2;
                     _context.InterviewTeam.Add(t);
+                   
+
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CV.InterviewTeam ON;");
                     await _context.SaveChangesAsync();
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CV.InterviewTeam OFF;");
 
 
+                    transaction.Commit();
+            }
 
-
-                }
+        }
                 //Update
                 else
                 {
@@ -248,7 +270,14 @@ namespace HR.Controllers
                         i.PersonCvid = obj.PersonCvid;
                         i.InterviewDate = obj.InterviewDate;
                         i.FunctionApply = obj.FunctionApply;
-                        i.DepartamentApply = obj.DepartamentApply;
+
+                    Functions f = _context.Functions.Where(x => x.Id == obj.FunctionApply).FirstOrDefault();
+
+                    Departments dep = _context.Departments.Where(x => x.Id == f.IdDepartment).FirstOrDefault();
+
+
+
+                    i.DepartamentApply = dep.Id;
 
                     if (obj.Accepted == 1)
                     {
@@ -343,15 +372,15 @@ namespace HR.Controllers
                     worksheet.Cell(currentRow, 1).Value = x.Id;
                     worksheet.Cell(currentRow, 2).Value = x.Name;
                     worksheet.Cell(currentRow, 3).Value = x.InterviewDate;
-                    worksheet.Cell(currentRow, 4).Value = x.FunctionApply;
-                    worksheet.Cell(currentRow, 5).Value = x.DepartamentApply;
+                    worksheet.Cell(currentRow, 4).Value = x.NameFunction;
+                    worksheet.Cell(currentRow, 5).Value = x.NameDepartment;
                     worksheet.Cell(currentRow, 6).Value = x.EmployeeName;
                     worksheet.Cell(currentRow, 7).Value = x.TestResult;
-                    if (x.Accepted == true)
+                    if (x.Accepted == false)
                     {
-                        worksheet.Cell(currentRow, 8).Value = "Yes";
+                        worksheet.Cell(currentRow, 8).Value = "No";
                     }
-                    else worksheet.Cell(currentRow, 8).Value = "No";
+                    else worksheet.Cell(currentRow, 8).Value = "Yes";
 
                     //if (x.RefusedReason == 1)
                     //{
@@ -363,7 +392,7 @@ namespace HR.Controllers
 
                     worksheet.Cell(currentRow, 9).Value = x.Comments;
 
-                    if (x.OffertStatus == 1)
+                    if (x.OffertStatus == 2)
                     {
                         worksheet.Cell(currentRow, 11).Value = "Refused";
                     }
@@ -416,7 +445,7 @@ namespace HR.Controllers
 
             if (!string.IsNullOrWhiteSpace(filter))
             {
-                qry = qry.Where(p => p.Name.Contains(filter) || p.FunctionApply.Contains(filter) || p.DepartamentApply.Contains(filter));
+                qry = qry.Where(p => p.Name.Contains(filter) || p.NameFunction.Contains(filter) || p.NameDepartment.Contains(filter));
             }
 
             var model = await PagingList.CreateAsync(

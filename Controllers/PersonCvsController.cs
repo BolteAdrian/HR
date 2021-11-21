@@ -43,7 +43,7 @@ namespace HR.Controllers
 
             if (!string.IsNullOrWhiteSpace(filter))
             {
-                qry = qry.Where(p => p.Name.Contains(filter) || p.FunctionApply.Contains(filter) || p.CityAddress.Contains(filter) || p.CountyAddress.Contains(filter));
+                qry = qry.Where(p => p.Name.Contains(filter)  || p.CityAddress.Contains(filter) || p.CountyAddress.Contains(filter));
             }
 
             var model = await PagingList.CreateAsync(
@@ -53,6 +53,11 @@ namespace HR.Controllers
         { "filter", filter}
     };
 
+
+            List<Functions> f = _context.Functions.ToList();
+            
+            ViewData["FunctionApply"] = f;
+            ViewData["FunctionMatch"] = f;
             return View(model);
         }
 
@@ -93,14 +98,7 @@ namespace HR.Controllers
                 }
             }
 
-            List<Documents> d = _context.Documents.Where(x => x.PersonCvid == EmployeeId).ToList();
-            if (d != null)
-            {
-                foreach (var item in d)
-                {
-                    _context.Documents.Remove(item);
-                }
-                }
+            DeleteEmployee2(EmployeeId);
                 _context.PersonCv.Remove(s);
             _context.SaveChanges();
             //TODO: inactivare interview team si interview dupa scaffold
@@ -135,35 +133,58 @@ namespace HR.Controllers
                 worksheet.Cell(currentRow, 9).Value = "BirthDate";
                 worksheet.Cell(currentRow, 10).Value = "Status";
 
-                foreach (var x in _context.PersonCv)
+                List<PersonCv> pe = _context.PersonCv.ToList();
+
+                foreach (var x in pe)
                 { 
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = x.Id;
                     worksheet.Cell(currentRow, 2).Value = x.Name;
                     worksheet.Cell(currentRow, 3).Value = Convert.ToString(x.DateApply);
-                    worksheet.Cell(currentRow, 4).Value = x.FunctionApply;
-                    worksheet.Cell(currentRow, 5).Value = x.Observation;
-                    if (x.ModeApply == 1)
+
+
+
+                    List<Functions> fu = _context.Functions.ToList();
+                    foreach (var f in fu)
                     {
-                        worksheet.Cell(currentRow, 6).Value = "Email";
+                        if (x.FunctionApply == f.Id)
+                        {
+                            worksheet.Cell(currentRow, 4).Value = f.NameFunction;
+                        }
+
+                        if (x.FunctionMatch == f.Id)
+                        {
+                            worksheet.Cell(currentRow, 5).Value = f.NameFunction;
+                        }
+
+
                     }
-                    else  worksheet.Cell(currentRow, 6).Value = "Paper";
+
+                    
+
+                    
+                    worksheet.Cell(currentRow, 6).Value = x.Observation;
+                    if (x.ModeApply == 2)
+                    {
+                        worksheet.Cell(currentRow, 7).Value = "Paper";
+                    }
+                    else  worksheet.Cell(currentRow, 7).Value = "Email";
                     
 
                     var dateTimeNow = (DateTime)x.BirthDate;
                     var dateOnlyString = dateTimeNow.ToShortDateString();
 
-                    worksheet.Cell(currentRow, 7).Value = x.CountyAddress;
-                    worksheet.Cell(currentRow, 8).Value = x.CityAddress;
-                    worksheet.Cell(currentRow, 9).Value = Convert.ToString(dateOnlyString);
+                    worksheet.Cell(currentRow, 8).Value = x.CountyAddress;
+                    worksheet.Cell(currentRow, 9).Value = x.CityAddress;
+                    worksheet.Cell(currentRow, 10).Value = Convert.ToString(dateOnlyString);
 
                    
 
-                    if (x.Status == 1)
+                    if (x.Status == 2)
                     {
-                        worksheet.Cell(currentRow, 10).Value = "Active";
+                        worksheet.Cell(currentRow, 10).Value = "Inactive";
                     }
-                    else  worksheet.Cell(currentRow, 10).Value = "Inactive";
+                    else  worksheet.Cell(currentRow, 10).Value = "Active";
                     
 
 
@@ -198,10 +219,10 @@ namespace HR.Controllers
                 if (smallFile.Length < maxFileSize)
                 {
 
-                    var path = Path.Combine(@"D:\Programe\New folder\htdocs\CV-uri\", pers.Id.ToString());
+                    var path = Path.Combine(@"D:\Programe\\Xampp\htdocs\CV-uri\", pers.Id.ToString());
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
-
+                     
                     using (var fileStream = System.IO.File.Create(Path.Combine(path, smallFile.FileName)))
                     {
                         smallFile.CopyTo(fileStream);
@@ -238,7 +259,7 @@ namespace HR.Controllers
             return new EmptyResult();
         }
 
-        
+   
         static string NumeF;
         //upload button for CV-s la creere person
 
@@ -259,13 +280,14 @@ namespace HR.Controllers
                 if (smallFile.Length < maxFileSize)
                 {
 
-                    var path = Path.Combine(@"D:\Programe\New folder\htdocs\CV-uri\", aux3.ToString());
+                    var path = Path.Combine(@"D:\Programe\\Xampp\htdocs\CV-uri\", aux3.ToString());
                     
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
-
+                  
                     using (var fileStream = System.IO.File.Create(Path.Combine(path, smallFile.FileName)))
                     {
+                        
                         smallFile.CopyTo(fileStream);
                     }
                 }
@@ -286,7 +308,7 @@ namespace HR.Controllers
         static int aux;
 
 
-        static string rootFolder = @"D:\Programe\New folder\htdocs\CV-uri\";
+        static string rootFolder = @"D:\Programe\Xampp\htdocs\CV-uri\";
 
 
         //delete document din baza de date si director
@@ -294,33 +316,36 @@ namespace HR.Controllers
         public JsonResult DeleteEmployee2(int EmployeeId)
         {
 
+          
             bool result = false;
             Documents s = _context.Documents.Where(x => x.Id == EmployeeId).SingleOrDefault();
-
-
-            _context.Documents.Remove(s);
-            _context.SaveChanges();
-
-
-            // Files to be deleted    
-            string authorsFile = s.DocumentName;
-            rootFolder += s.Id;
-            try
+            if (s != null)
             {
-                // Check if file exists with its full path    
-                if (System.IO.File.Exists(Path.Combine(rootFolder, authorsFile)))
+
+                _context.Documents.Remove(s);
+                _context.SaveChanges();
+
+
+                // Files to be deleted    
+                string authorsFile = s.DocumentName;
+                rootFolder += s.PersonCvid+"\\";
+                
+                try
                 {
-                    // If file found, delete it    
-                    System.IO.File.Delete(Path.Combine(rootFolder, authorsFile));
+                    // Check if file exists with its full path    
+                    if (System.IO.File.Exists(Path.Combine(rootFolder, authorsFile)))
+                    {
+                        // If file found, delete it    
+                        System.IO.File.Delete(Path.Combine(rootFolder, authorsFile));
+
+                    }
 
                 }
+                catch
+                {
 
+                }
             }
-            catch
-            {
-
-            }
-
 
 
             return Json(result);
@@ -380,6 +405,8 @@ namespace HR.Controllers
         {
             ViewData["ModeApply"] = new SelectList(_context.Auxi, "Id", "ModeApply");
             ViewData["Status"] = new SelectList(_context.Auxi, "Id", "Status");
+            ViewData["FunctionApply"] = new SelectList(_context.Functions, "Id", "NameFunction");
+            ViewData["FunctionMatch"] = new SelectList(_context.Functions, "Id", "NameFunction");
             return View();
         }
 
@@ -457,11 +484,13 @@ return RedirectToAction(nameof(Index));
         }
 
 
-
+        
         [Authorize(Roles = "Admin")]
         // GET: PersonCvs/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
+            ViewData["FunctionApply"] = new SelectList(_context.Functions, "Id", "NameFunction");
+            ViewData["FunctionMatch"] = new SelectList(_context.Functions, "Id", "NameFunction");
             ViewData["ModeApply"] = new SelectList(_context.Auxi, "Id", "ModeApply");
             ViewData["Status"] = new SelectList(_context.Auxi, "Id", "Status");
             if (id == null)

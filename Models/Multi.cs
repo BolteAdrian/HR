@@ -13,8 +13,8 @@ namespace HR.Models
         public long IdP { get; set; }
         public string Name { get; set; }
         public DateTime? InterviewDate { get; set; }
-        public string FunctionApply { get; set; }
-        public string DepartamentApply { get; set; }
+        public string NameFunction { get; set; }
+        public string NameDepartment { get; set; }
         public int? EmployeeId { get; set; }
         public string EmployeeName { get; set; }
         public bool? Accepted { get; set; }

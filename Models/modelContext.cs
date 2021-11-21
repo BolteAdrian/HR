@@ -21,10 +21,12 @@ namespace HR.Models
         }
 
 
-     
+      
         public virtual DbSet<Auxi> Auxi { get; set; }
+        public virtual DbSet<Departments> Departments { get; set; }
         public virtual DbSet<Documents> Documents { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
+        public virtual DbSet<Functions> Functions { get; set; }
         public virtual DbSet<InterviewCv> InterviewCv { get; set; }
         public virtual DbSet<InterviewTeam> InterviewTeam { get; set; }
         public virtual DbSet<Multi> Multi { get; set; }
@@ -42,7 +44,7 @@ namespace HR.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-          
+         
 
             modelBuilder.Entity<Auxi>(entity =>
             {
@@ -78,6 +80,17 @@ namespace HR.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<Departments>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.NameDepartment)
+                    .IsRequired()
+                    .HasColumnName("name_department")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Documents>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
@@ -85,18 +98,13 @@ namespace HR.Models
                 entity.Property(e => e.DateAdded).HasColumnType("datetime");
 
                 entity.Property(e => e.DocumentName)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Observation)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.PersonCv)
-                    .WithMany(p => p.Documents)
-                    .HasForeignKey(d => d.PersonCvid)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Documents_PersonCV");
             });
 
             modelBuilder.Entity<Employee>(entity =>
@@ -133,6 +141,19 @@ namespace HR.Models
                 entity.Property(e => e.UserName).HasMaxLength(128);
             });
 
+            modelBuilder.Entity<Functions>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdDepartment).HasColumnName("id_department");
+
+                entity.Property(e => e.NameFunction)
+                    .IsRequired()
+                    .HasColumnName("name_function")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<InterviewCv>(entity =>
             {
                 entity.ToTable("InterviewCV", "CV");
@@ -145,11 +166,7 @@ namespace HR.Models
 
                 entity.Property(e => e.DateAnswer).HasColumnType("datetime");
 
-                entity.Property(e => e.DepartamentApply).HasMaxLength(100);
-
                 entity.Property(e => e.EmploymentDate).HasColumnType("datetime");
-
-                entity.Property(e => e.FunctionApply).HasMaxLength(100);
 
                 entity.Property(e => e.InterviewDate).HasColumnType("datetime");
 
@@ -199,21 +216,29 @@ namespace HR.Models
 
                 entity.Property(e => e.DateAnswer).HasColumnType("datetime");
 
-                entity.Property(e => e.DepartamentApply).HasMaxLength(100);
-
                 entity.Property(e => e.EmployeeName)
                     .HasMaxLength(150)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EmploymentDate).HasColumnType("datetime");
 
-                entity.Property(e => e.FunctionApply).HasMaxLength(100);
-
                 entity.Property(e => e.InterviewDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(200);
+
+                entity.Property(e => e.NameDepartment)
+                    .IsRequired()
+                    .HasColumnName("name_department")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NameFunction)
+                    .IsRequired()
+                    .HasColumnName("name_function")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TestResult).HasMaxLength(200);
             });
@@ -237,10 +262,6 @@ namespace HR.Models
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.DateApply).HasColumnType("datetime");
-
-                entity.Property(e => e.FunctionApply).HasMaxLength(100);
-
-                entity.Property(e => e.FunctionMatch).HasMaxLength(100);
 
                 entity.Property(e => e.Name)
                     .IsRequired()

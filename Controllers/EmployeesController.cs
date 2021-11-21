@@ -24,12 +24,13 @@ namespace HR_CV.Controllers
             _context = context;
         }
 
-    
+
         // index cu search,paginare si order by name si id
+        [Authorize]
         public async Task<IActionResult> Index(string filter, int page = 1,
                                               string sortExpression = "EmployeeId")
         {
-            List<Multi> _multitable = await _context.Multi.AsNoTracking().OrderBy(p => p.Id).ToListAsync();
+           
 
 
 
