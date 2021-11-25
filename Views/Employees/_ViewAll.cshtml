@@ -19,129 +19,136 @@
         <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
     </button>
     <br />
+    &nbsp;
     <a asp-action="Index">     Get All Interviews</a>
 </form>
 
 <div class="text-right">
-    <form method="post" asp-controller="Employees" asp-action="ExportToExcel">
+    <a onclick="showInPopup('@Url.Action("Index","SentEmail",null,Context.Request.Scheme)','Email')" class="btn btn-success text-white"><i class="fas fa-random"></i> Email</a>
+    <br>
+    <form  method="post" asp-controller="Employees" asp-action="ExportToExcel">
         <input type="submit" value="Export To Excel" />
     </form>
 </div>
+<div class="text-left">
 
+    <a class="btn btn-success text-white" href="javascript:void(0);" onclick="printPageArea('printableArea')">Print</a>
+</div>
 
 <div class="" style="width:40%;margin-top:2%">
-    <table class="table table-bordered ">
-        <thead class="thead-dark">
-            <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">@Html.SortableHeaderFor(model => model.EmployeeId, this.Model)</th>
+    <div id="printableArea">
+        <table class="table table-bordered ">
+            <thead class="thead-dark">
+                <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">@Html.SortableHeaderFor(model => model.EmployeeId, this.Model)</th>
 
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">@Html.SortableHeaderFor(model => model.EmployeeName, this.Model)</th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayNameFor(model => model.OrganizationId)
-                </th>
-              
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayNameFor(model => model.EmploymentDate)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayNameFor(model => model.Email)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayNameFor(model => model.Team)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayNameFor(model => model.CompanyShortName)
-                </th >
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    Actions
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-            <tr id="row_@item.Id" style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayFor(modelItem => item.EmployeeId)
-                </td>
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayFor(modelItem => item.EmployeeName)
-                </td>
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayFor(modelItem => item.OrganizationId)
-                </td>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">@Html.SortableHeaderFor(model => model.EmployeeName, this.Model)</th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                        @Html.DisplayNameFor(model => model.OrganizationId)
+                    </th>
 
-                @{
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                        @Html.DisplayNameFor(model => model.EmploymentDate)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                        @Html.DisplayNameFor(model => model.Team)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                        @Html.DisplayNameFor(model => model.CompanyShortName)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="row_@item.Id" style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                            @Html.DisplayFor(modelItem => item.EmployeeId)
+                        </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                            @Html.DisplayFor(modelItem => item.EmployeeName)
+                        </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                            @Html.DisplayFor(modelItem => item.OrganizationId)
+                        </td>
+
+                        @{
 
 
-                    var dateTimeNow = (DateTime)item.EmploymentDate;
-                    var dateOnlyString = dateTimeNow.ToShortDateString();
+                            var dateTimeNow = (DateTime)item.EmploymentDate;
+                            var dateOnlyString = dateTimeNow.ToShortDateString();
+                        }
+
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => dateOnlyString)
+                        </td>
+
+
+
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                            @Html.DisplayFor(modelItem => item.Team)
+                        </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                            @Html.DisplayFor(modelItem => item.CompanyShortName)
+                        </td>
+
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                            <a onclick="showInPopup('@Url.Action("AddOrEdit","Employees",new {id=item.Id},Context.Request.Scheme)','Update Employees')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                            <b class="btn btn-danger"><a onclick="ConfirmDelete(@item.Id)"> Delete</a></b>
+                        </td>
+                    </tr>
                 }
+            </tbody>
+        </table>
+        </div>
 
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayFor(modelItem => dateOnlyString)
-                </td>
-
-
-            
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayFor(modelItem => item.Team)
-                </td>
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.DisplayFor(modelItem => item.CompanyShortName)
-                </td>
-
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    <a onclick="showInPopup('@Url.Action("AddOrEdit","Employees",new {id=item.Id},Context.Request.Scheme)','Update Employees')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
-                    <b class="btn btn-danger"><a onclick="ConfirmDelete(@item.Id)"> Delete</a></b>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
 
 
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h3 class="modal-title">Delete </h3>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are you sure ? You want to delete this. </h4>
 
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                        <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
+                    </div>
 
-                <div class="modal-header">
-                    <a href="#" class="close" data-dismiss="modal">&times;</a>
-                    <h3 class="modal-title">Delete </h3>
-                </div>
-                <div class="modal-body">
-                    <h4>Are you sure ? You want to delete this. </h4>
-
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                    <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
                 </div>
 
             </div>
 
         </div>
 
+        <input type="hidden" id="hiddenId" />
+
     </div>
 
-    <input type="hidden" id="hiddenId" />
-
-</div>
 
 
+    <nav aria-label="Suppliers navigation example">
+        <vc:pager paging-list="@Model" />
+    </nav>
 
-<nav aria-label="Suppliers navigation example">
-    <vc:pager paging-list="@Model" />
-</nav>
-
-<input type="button" value="Back" onclick="location.href='@Url.Action("Index", "InterviewCvs")'" />
+    <input type="button" value="Back" onclick="location.href='@Url.Action("Index", "InterviewCvs")'" />
 
 
-<script>
+    <script>
 
 
     var ConfirmDelete = function (Id) {
@@ -176,5 +183,16 @@
 
         })
 
-    }
-</script>
+        }
+
+
+        function printPageArea(areaID) {
+            var printContent = document.getElementById(areaID);
+            var WinPrint = window.open('', '', 'width=900,height=650');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+            WinPrint.close();
+        }
+    </script>

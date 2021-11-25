@@ -10,222 +10,249 @@
 <h1>CVs</h1>
 
 
-
-
 <input type="button" value="Add Person" class="btn btn-success text-white" onclick="location.href='@Url.Action("Create", "PersonCvs")'" />
+<br>
 
-<br />
 
 <form method="get" class="form-inline">
     <input name="filter" class="form-control" placeholder=""
            value="@Model.RouteValue["Filter"]" />
     <button type="submit" class="btn btn-info">
         <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
-    </button><br />
+    </button>
+    &nbsp;
     <a asp-action="Index">     Get All Persons</a>
 </form>
 
 
 <div class="text-right">
+    <a onclick="showInPopup('@Url.Action("Index","SentEmail",null,Context.Request.Scheme)','Email')" class="btn btn-success text-white"><i class="fas fa-random"></i> Email</a>
+    <br>
     <form method="post" asp-controller="PersonCvs" asp-action="ExportToExcel">
-        <input type="submit" value="Export To Excel" />
+        <input class="btn btn-success text-white" type="submit" value="Export To Excel" />
     </form>
 </div>
 
+<div class="text-left">
+
+    <a class="btn btn-success text-white" href="javascript:void(0);" onclick="printPageArea('printableArea')">Print</a>
+</div>
 
 
-<div class="" style="width:40%;margin-top:2%">
-    <table class="table table-bordered ">
-        <thead class="thead-dark">
-            <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.SortableHeaderFor(model => model.Id)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    @Html.SortableHeaderFor(model => model.Name)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayNameFor(model => model.DateApply)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayNameFor(model => model.FunctionApply)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayNameFor(model => model.FunctionMatch)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayNameFor(model => model.Observation)
-                </th>
+<div  class="" style="width:40%;margin-top:2%">
+    <div id="printableArea" >
+        <table class="table table-bordered ">
+            <thead class="thead-dark">
+                <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.Id)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                        @Html.SortableHeaderFor(model => model.Name)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.DisplayNameFor(model => model.DateApply)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.DisplayNameFor(model => model.FunctionApply)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.DisplayNameFor(model => model.FunctionMatch)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.DisplayNameFor(model => model.Observation)
+                    </th>
 
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-
-
-
-                    @Html.DisplayNameFor(model => model.ModeApply)
-                </th>
-
-
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayNameFor(model => model.CountyAddress)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayNameFor(model => model.CityAddress)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                  
-                    @Html.DisplayNameFor(model => model.BirthDate)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-            <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayFor(modelItem => item.DateApply)
-                </td>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
 
 
 
-                @foreach (var f in (List<Functions>)ViewBag.FunctionApply)
+                        @Html.DisplayNameFor(model => model.ModeApply)
+                    </th>
+
+
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.DisplayNameFor(model => model.CountyAddress)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.DisplayNameFor(model => model.CityAddress)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+
+                        @Html.DisplayNameFor(model => model.BirthDate)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
                 {
-                    @if (item.FunctionApply == f.Id)
-                    {
+                    <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => item.DateApply)
+                        </td>
+
+
+
+                        @foreach (var f in (List<Functions>)ViewBag.FunctionApply)
+                        {
+                            @if (item.FunctionApply == f.Id)
+                            {
+
+
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    @f.NameFunction
+                                </td>
+                            }
+                        }
+
+
+
+                        @foreach (var f in (List<Functions>)ViewBag.FunctionMatch)
+                        {
+                            @if (item.FunctionMatch == f.Id)
+                            {
+
+
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    @f.NameFunction
+                                </td>
+                            }
+                        }
+
+
+
+
+
 
 
                         <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @f.NameFunction
+                            @Html.DisplayFor(modelItem => item.Observation)
                         </td>
-                    }
-                }
 
-
-
-                @foreach (var f in (List<Functions>)ViewBag.FunctionMatch)
-                {
-                    @if (item.FunctionMatch == f.Id)
-                    {
+                        @if (item.ModeApply == 2)
+                        {
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                Paper
+                            </td>
+                        }
+                        else
+                        {
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                Email
+                            </td>
+                        }
 
 
                         <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @f.NameFunction
+                            @Html.DisplayFor(modelItem => item.CountyAddress)
                         </td>
-                    }
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => item.CityAddress)
+                        </td>
+                        @{
+
+
+                            var dateTimeNow = (DateTime)item.BirthDate;
+                            var dateOnlyString = dateTimeNow.ToShortDateString();
+                        }
+
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => dateOnlyString)
+                        </td>
+
+                        @if (item.Status == 2)
+                        {
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                Inactive
+                            </td>
+                        }
+                        else
+                        {
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                Active
+                            </td>
+                        }
+
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+
+                            <a class="btn btn-info text-white" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                            <b class="btn btn-danger">
+                                <a onclick="ConfirmDelete(@item.Id)">Delete <i class="glyphicon-trash"></i>  </a>
+
+                            </b>
+                        </td>
+
+
+                    </tr>
                 }
+            </tbody>
+        </table>
+        </div>
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
 
 
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h3 class="modal-title">Delete person</h3>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are you sure ? You want to delete this. </h4>
 
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                        <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
+                    </div>
 
-
-
-
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayFor(modelItem => item.Observation)
-                </td>
-
-                @if (item.ModeApply == 2)
-                {
-            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                Paper 
-            </td>
-                }
-                else
-                {
-            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                Email
-            </td>
-                }
-
-
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayFor(modelItem => item.CountyAddress)
-                </td>
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayFor(modelItem => item.CityAddress)
-                </td>
-                @{
-
-
-                    var dateTimeNow = (DateTime)item.BirthDate;
-                    var dateOnlyString = dateTimeNow.ToShortDateString();
-                }
-
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    @Html.DisplayFor(modelItem => dateOnlyString)
-                </td>
-
-                @if (item.Status == 2)
-                {
-            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                Inactive
-            </td>
-                }
-                else
-                {
-            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                Active
-            </td>
-                }
-
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-
-                    <a class="btn btn-info text-white" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    <b class="btn btn-danger">
-                        <a onclick="ConfirmDelete(@item.Id)">Delete <i class="glyphicon-trash"></i>  </a>
-
-                    </b>
-                </td>
-
-
-            </tr>
-            }
-        </tbody>
-    </table>
-
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-
-                <div class="modal-header">
-                    <a href="#" class="close" data-dismiss="modal">&times;</a>
-                    <h3 class="modal-title">Delete person</h3>
-                </div>
-                <div class="modal-body">
-                    <h4>Are you sure ? You want to delete this. </h4>
-
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                    <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
                 </div>
 
             </div>
 
         </div>
 
+        <input type="hidden" id="hiddenId" />
+
+
+
+
+        <div class="modal" tabindex="-1" role="dialog" id="form-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 
-    <input type="hidden" id="hiddenId" />
 
-</div>
+    <nav aria-label="Suppliers navigation example">
+        <vc:pager paging-list="@Model" />
+    </nav>
 
-
-<nav aria-label="Suppliers navigation example">
-    <vc:pager paging-list="@Model" />
-</nav>
-
-<script>
+    <script>
 
 
     var ConfirmDelete = function (Id) {
@@ -261,10 +288,22 @@
 
         })
 
-    }
-</script>
+        }
+
+
+
+        function printPageArea(areaID) {
+            var printContent = document.getElementById(areaID);
+            var WinPrint = window.open('', '', 'width=900,height=650');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+            WinPrint.close();
+        }
+    </script>
 
 
 
 
-<input type="button" value="Back" onclick="location.href='@Url.Action("Index", "Home")'" />
+    <input type="button" value="Back" onclick="location.href='@Url.Action("Index", "Home")'" />
