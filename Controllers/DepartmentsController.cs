@@ -138,7 +138,7 @@ namespace HR.Controllers
 
 
 
-       
+        [Authorize(Roles = "Admin")]
         public JsonResult DeleteEmployee(int EmployeeId)
         {
             bool result = false;

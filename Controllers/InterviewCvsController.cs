@@ -86,6 +86,29 @@ namespace HR.Controllers
 
 
 
+        public double percente(List<Multi> M)
+        {
+            int contor = 0;
+            int contor2 = 0;
+            M = _context.Multi.ToList();
+            foreach(var v in M)
+            {
+                contor++;
+                if (v.OffertStatus == 1)
+                {
+                    contor2++;
+                }
+            }
+
+            double value = ((double)contor2 / (double)contor) * 100.0;
+
+            return value;
+        }
+
+
+
+
+
         //delete employee
         [Authorize(Roles = "Admin")]
         public JsonResult DeleteEmployee2(int EmployeeId)
@@ -454,6 +477,10 @@ namespace HR.Controllers
             model.RouteValue = new RouteValueDictionary {
         { "filter", filter}
     };
+
+
+            ViewData["Procent"]= (float)percente(_multitable);
+
 
             return View(model);
         }

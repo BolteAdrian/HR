@@ -23,7 +23,7 @@ namespace HR.Controllers
 
         // GET: Functions
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string filter, int page = 1,
                                             string sortExpression = "Id")
         {
@@ -85,8 +85,10 @@ namespace HR.Controllers
         // POST: Functions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,NameFunction,IdDepartment")] Functions functions)
         {
             if (ModelState.IsValid)
@@ -99,6 +101,7 @@ namespace HR.Controllers
         }
 
         // GET: Functions/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
