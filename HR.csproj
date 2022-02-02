@@ -23,6 +23,9 @@
     <PackageReference Include="ReflectionIT.Mvc.Paging" Version="4.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HRML.Model\HRML.Model.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Update="Views\Documents\Create.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

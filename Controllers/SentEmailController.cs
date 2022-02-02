@@ -21,7 +21,7 @@ namespace HR.Controllers
         {
             return View();
         }
-  private readonly modelContext _context;
+
 
         
     

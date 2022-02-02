@@ -276,7 +276,7 @@ namespace HR.Controllers
 
                         if (x.FunctionMatch == f.Id)
                         {
-                            worksheet.Cell(currentRow, 5).Value = f.NameFunction;
+                            worksheet.Cell(currentRow, 4).Value = f.NameFunction;
                         }
 
 
@@ -285,20 +285,20 @@ namespace HR.Controllers
                     
 
                     
-                    worksheet.Cell(currentRow, 6).Value = x.Observation;
+                    worksheet.Cell(currentRow, 5).Value = x.Observation;
                     if (x.ModeApply == 2)
                     {
-                        worksheet.Cell(currentRow, 7).Value = "Paper";
+                        worksheet.Cell(currentRow, 6).Value = "Paper";
                     }
-                    else  worksheet.Cell(currentRow, 7).Value = "Email";
+                    else  worksheet.Cell(currentRow, 6).Value = "Email";
                     
 
                     var dateTimeNow = (DateTime)x.BirthDate;
                     var dateOnlyString = dateTimeNow.ToShortDateString();
 
-                    worksheet.Cell(currentRow, 8).Value = x.CountyAddress;
-                    worksheet.Cell(currentRow, 9).Value = x.CityAddress;
-                    worksheet.Cell(currentRow, 10).Value = Convert.ToString(dateOnlyString);
+                    worksheet.Cell(currentRow, 7).Value = x.CountyAddress;
+                    worksheet.Cell(currentRow, 8).Value = x.CityAddress;
+                    worksheet.Cell(currentRow, 9).Value = Convert.ToString(dateOnlyString);
 
                    
 

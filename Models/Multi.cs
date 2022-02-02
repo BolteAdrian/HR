@@ -21,8 +21,10 @@ namespace HR.Models
         public string TestResult { get; set; }
         public int? RefusedReason { get; set; }
         public string Comments { get; set; }
+        public string Observation { get; set; }
         public DateTime? DateAnswer { get; set; }
         public int? OffertStatus { get; set; }
         public DateTime? EmploymentDate { get; set; }
+
     }
 }

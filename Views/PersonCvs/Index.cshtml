@@ -12,6 +12,8 @@
 
 <input type="button" value="Add Person" class="btn btn-success text-white" onclick="location.href='@Url.Action("Create", "PersonCvs")'" />
 <input type="button" value="Statistics" class="btn btn-success text-white" onclick="location.href='@Url.Action("Statistics", "PersonCvs")'" />
+<input class="btn btn-success text-white" type="button" value="Prediction" onclick="location.href='@Url.Action("Index", "Predictie")'" />
+
 <br>
 
 
@@ -29,6 +31,7 @@
 
 <div class="text-right">
     <a onclick="showInPopup('@Url.Action("Index","SentEmail",null,Context.Request.Scheme)','Email')" class="btn btn-success text-white"><i class="fas fa-random"></i> Email</a>
+
     <br>
 
 </div>
@@ -36,7 +39,7 @@
 
 <div class="text-right">
     <form method="post" asp-controller="PersonCvs" asp-action="ExportToExcel">
-        <input  type="submit" value="Export To Excel" />
+        <input type="submit" value="Export To Excel" />
     </form>
 </div>
 
@@ -46,57 +49,58 @@
 </div>
 
 
-    <div class="" style="width:40%;margin-top:2%">
-        <div id="printableArea">
-            <table class="table table-bordered ">
-                <thead class="thead-dark">
-                    <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @Html.SortableHeaderFor(model => model.Id)
-                        </th>
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                            @Html.SortableHeaderFor(model => model.Name)
-                        </th>
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @Html.DisplayNameFor(model => model.DateApply)
-                        </th>
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @Html.DisplayNameFor(model => model.FunctionApply)
-                        </th>
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @Html.DisplayNameFor(model => model.FunctionMatch)
-                        </th>
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @Html.DisplayNameFor(model => model.Observation)
-                        </th>
+<div class="" style="width:40%;margin-top:2%">
+    <div id="printableArea">
+        <table class="table table-bordered ">
+            <thead class="thead-dark">
+                <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.Id)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
+                        @Html.SortableHeaderFor(model => model.Name)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.DateApply)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.FunctionApply)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.FunctionMatch)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.Observation)
+                    </th>
 
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-
-
-
-                            @Html.DisplayNameFor(model => model.ModeApply)
-                        </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
 
 
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @Html.DisplayNameFor(model => model.CountyAddress)
-                        </th>
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @Html.DisplayNameFor(model => model.CityAddress)
-                        </th>
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.ModeApply)
+                    </th>
 
-                            @Html.DisplayNameFor(model => model.BirthDate)
-                        </th>
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @Html.DisplayNameFor(model => model.Status)
-                        </th>
-                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.CountyAddress)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.CityAddress)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+
+                        @Html.SortableHeaderFor(model => model.BirthDate)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.Status)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+
                         <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
                             <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
                                 @Html.DisplayFor(modelItem => item.Id)
@@ -135,10 +139,6 @@
                                     </td>
                                 }
                             }
-
-
-
-
 
 
 
@@ -201,65 +201,65 @@
 
 
                         </tr>
-                    }
+                                }
                 </tbody>
-            </table>
-        </div>
-        <div class="modal fade" id="myModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
+        </table>
+    </div>
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
 
-                    <div class="modal-header">
-                        <a href="#" class="close" data-dismiss="modal">&times;</a>
-                        <h3 class="modal-title">Delete person</h3>
-                    </div>
-                    <div class="modal-body">
-                        <h4>Are you sure ? You want to delete this. </h4>
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h3 class="modal-title">Delete person</h3>
+                </div>
+                <div class="modal-body">
+                    <h4>Are you sure ? You want to delete this. </h4>
 
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                        <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
-                    </div>
-
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                    <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
                 </div>
 
             </div>
 
         </div>
-
-        <input type="hidden" id="hiddenId" />
-
-
-
-
-        <div class="modal" tabindex="-1" role="dialog" id="form-modal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title"></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
 
     </div>
 
+    <input type="hidden" id="hiddenId" />
 
-    <nav aria-label="Suppliers navigation example">
-        <vc:pager paging-list="@Model" />
-    </nav>
 
-    <script>
+
+
+    <div class="modal" tabindex="-1" role="dialog" id="form-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<nav aria-label="Suppliers navigation example">
+    <vc:pager paging-list="@Model" />
+</nav>
+
+<script>
 
 
     var ConfirmDelete = function (Id) {
@@ -308,9 +308,9 @@
             WinPrint.print();
             WinPrint.close();
         }
-    </script>
+</script>
 
 
 
 
-    <input type="button" value="Back" onclick="location.href='@Url.Action("Index", "Home")'" />
+<input type="button" value="Back" onclick="location.href='@Url.Action("Index", "Home")'" />

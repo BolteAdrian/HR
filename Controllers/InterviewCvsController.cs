@@ -28,6 +28,141 @@ namespace HR.Controllers
 
 
 
+
+        public ActionResult GetData()
+        {
+
+            var qry = _context.Multi.AsNoTracking().GroupBy(p => p.EmploymentDate)
+               .Select(g => new { name = g.Key, count = g.Sum(w => w.Id) }).ToList();
+
+            return new JsonResult(new { data = qry });
+            // return Json(qry, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+
+            // return Json(new { data = qry }, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult Statistics()
+        {
+
+            var ian = 0;
+            var feb = 0;
+            var mar = 0;
+            var apr = 0;
+            var mai = 0;
+            var iun = 0;
+            var iul = 0;
+            var aug = 0;
+            var sep = 0;
+            var oct = 0;
+            var nom = 0;
+            var dec = 0;
+
+
+
+            var qry = _context.Multi.AsNoTracking().OrderBy(x => x.Id).Select(x => x.EmploymentDate)
+              .ToList();
+
+
+            List<int> date = new List<int>();
+
+            foreach (var i in qry)
+            {
+                if (i != null)
+                {
+                    
+
+                    if (i.Value.Month == 1)
+                    {
+                        ian++;
+                    }
+                    else if (i.Value.Month == 2)
+                    {
+                        feb++;
+                    }
+                    else if (i.Value.Month == 3)
+                    {
+                        mar++;
+                    }
+                    else if (i.Value.Month == 4)
+                    {
+                        apr++;
+                    }
+                    else if (i.Value.Month == 5)
+                    {
+                        mai++;
+                    }
+                    else if (i.Value.Month == 6)
+                    {
+                        iun++;
+                    }
+                    else if (i.Value.Month == 7)
+                    {
+                        iul++;
+                    }
+                    else if (i.Value.Month == 8)
+                    {
+                        aug++;
+                    }
+                    else if (i.Value.Month == 9)
+                    {
+                        sep++;
+                    }
+                    else if (i.Value.Month == 10)
+                    {
+                        oct++;
+                    }
+                    else if (i.Value.Month == 11)
+                    {
+                        nom++;
+                    }
+                    else if (i.Value.Month == 12)
+                    {
+                        dec++;
+                    }
+                }
+            }
+
+            date.Add(ian);
+            date.Add(feb);
+            date.Add(mar);
+            date.Add(apr);
+            date.Add(mai);
+            date.Add(iun);
+            date.Add(iul);
+            date.Add(aug);
+            date.Add(sep);
+            date.Add(oct);
+            date.Add(nom);
+            date.Add(dec);
+
+
+
+
+
+
+            ViewData["X"] = date;
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //delete interview
         [Authorize(Roles = "Admin")]
         public JsonResult DeleteEmployee(int EmployeeId)
@@ -479,7 +614,7 @@ namespace HR.Controllers
     };
 
 
-            ViewData["Procent"]= (float)percente(_multitable);
+             ViewData["Procent"]= (float)percente(_multitable);
 
 
             return View(model);

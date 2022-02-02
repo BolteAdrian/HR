@@ -1,0 +1,170 @@
+﻿@model ReflectionIT.Mvc.Paging.PagingList<HR.Models.PersonCv>
+@using ReflectionIT.Mvc.Paging
+@addTagHelper *, ReflectionIT.Mvc.Paging
+@{
+    ViewData["Title"] = "Index";
+    var Dictionary = (Dictionary<int, float>)ViewData["Prediction"];
+}
+
+<h1>Prediction</h1>
+
+
+<form method="get" class="form-inline">
+    <input name="filter" class="form-control" placeholder=""
+           value="@Model.RouteValue["Filter"]" />
+    <button type="submit" class="btn btn-info">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+    </button>
+    &nbsp;
+    <a asp-action="Index">     Get All Persons</a>
+</form>
+
+<div class="" style="width:40%;margin-top:2%">
+    <div id="printableArea">
+        <table class="table table-bordered ">
+            <thead class="thead-dark">
+                <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.Id, this.Model)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.Name, this.Model)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.BirthDate, this.Model)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.FunctionApply, this.Model)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.FunctionMatch, this.Model)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.ModeApply, this.Model)
+                    </th>
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        @Html.SortableHeaderFor(model => model.Observation, this.Model)
+                    </th>
+                  
+                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        Prediction of success
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+
+                @{ int i = 0;
+
+                    foreach (var item in Model)
+                    {
+                        @if (item.Status != 2)
+                        {
+                            i++;
+
+
+                            <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    @Html.DisplayFor(modelItem => item.Id)
+                                </td>
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+
+
+                                @{
+
+
+                                    var dateTimeNow = (DateTime)item.BirthDate;
+                                    var dateOnlyString = dateTimeNow.ToShortDateString();
+                                }
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    @Html.DisplayFor(modelItem => dateOnlyString)
+                                </td>
+
+
+                                @foreach (var f in (List<Functions>)ViewBag.FunctionApply)
+                                {
+                                    @if (item.FunctionApply == f.Id)
+                                    {
+
+
+                                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                            @f.NameFunction
+                                        </td>
+                                    }
+                                }
+
+
+
+                                @foreach (var f in (List<Functions>)ViewBag.FunctionMatch)
+                                {
+                                    @if (item.FunctionMatch == f.Id)
+                                    {
+
+
+                                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                            @f.NameFunction
+                                        </td>
+                                    }
+                                }
+
+                                @if (item.ModeApply == 2)
+                                {
+                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                        Paper
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                        Email
+                                    </td>
+                                }
+
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    @Html.DisplayFor(modelItem => item.Observation)
+                                </td>
+
+
+
+
+
+
+                                @foreach (var p in Dictionary)
+                                {
+                                    if (Dictionary.ContainsKey((int)item.Id))
+                                    {
+                                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                            @Dictionary.GetValueOrDefault((int)item.Id) %
+                                        </td>
+
+                                    }
+                                    break;
+                                }
+
+
+                            </tr>
+                        }
+                        else continue;
+                    }
+                }
+
+                
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+<nav aria-label="Suppliers navigation example">
+    <vc:pager paging-list="@Model" />
+</nav>

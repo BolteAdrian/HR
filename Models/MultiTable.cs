@@ -28,7 +28,7 @@ namespace HR.Models
 
         public int? Accepted { get; set; }
         [Required]
-        public string? TestResult { get; set; }
+        public string TestResult { get; set; }
         public int? RefusedReason { get; set; }
         public string RefusedObservation { get; set; }
         public string Comments { get; set; }
