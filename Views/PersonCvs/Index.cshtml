@@ -101,109 +101,110 @@
                 @foreach (var item in Model)
                 {
 
-                        <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                @Html.DisplayFor(modelItem => item.Id)
-                            </td>
-                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                @Html.DisplayFor(modelItem => item.DateApply)
-                            </td>
+                    <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => item.DateApply)
+                        </td>
 
 
 
-                            @foreach (var f in (List<Functions>)ViewBag.FunctionApply)
+                        @foreach (var f in (List<Functions>)ViewBag.FunctionApply)
+                        {
+                            @if (item.FunctionApply == f.Id)
                             {
-                                @if (item.FunctionApply == f.Id)
-                                {
 
 
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                        @f.NameFunction
-                                    </td>
-                                }
-                            }
-
-
-
-                            @foreach (var f in (List<Functions>)ViewBag.FunctionMatch)
-                            {
-                                @if (item.FunctionMatch == f.Id)
-                                {
-
-
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                        @f.NameFunction
-                                    </td>
-                                }
-                            }
-
-
-
-                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                @Html.DisplayFor(modelItem => item.Observation)
-                            </td>
-
-                            @if (item.ModeApply == 2)
-                            {
                                 <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                    Paper
+                                    @f.NameFunction
                                 </td>
                             }
-                            else
+                        }
+
+
+
+                        @foreach (var f in (List<Functions>)ViewBag.FunctionMatch)
+                        {
+                            @if (item.FunctionMatch == f.Id)
                             {
+
+
                                 <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                    Email
+                                    @f.NameFunction
                                 </td>
                             }
+                        }
 
 
+
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => item.Observation)
+                        </td>
+
+                        @if (item.ModeApply == 2)
+                        {
                             <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                @Html.DisplayFor(modelItem => item.CountyAddress)
+                                Paper
                             </td>
+                        }
+                        else
+                        {
                             <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                @Html.DisplayFor(modelItem => item.CityAddress)
+                                Email
                             </td>
-                            @{
+                        }
 
 
-                                var dateTimeNow = (DateTime)item.BirthDate;
-                                var dateOnlyString = dateTimeNow.ToShortDateString();
-                            }
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => item.CountyAddress)
+                        </td>
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => item.CityAddress)
+                        </td>
+                        @{
 
+
+                            var dateTimeNow = (DateTime)item.BirthDate;
+                            var dateOnlyString = dateTimeNow.ToShortDateString();
+                        }
+
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                            @Html.DisplayFor(modelItem => dateOnlyString)
+                        </td>
+
+                        @if (item.Status == 2)
+                        {
                             <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                @Html.DisplayFor(modelItem => dateOnlyString)
+                                Inactive
                             </td>
-
-                            @if (item.Status == 2)
-                            {
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                    Inactive
-                                </td>
-                            }
-                            else
-                            {
-                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                    Active
-                                </td>
-                            }
-
+                        }
+                        else
+                        {
                             <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-
-                                <a class="btn btn-info text-white" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                                <b class="btn btn-danger">
-                                    <a onclick="ConfirmDelete(@item.Id)">Delete <i class="glyphicon-trash"></i>  </a>
-
-                                </b>
+                                Active
                             </td>
+                        }
+
+                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+
+                            <a class="btn btn-info text-white" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                            <b class="btn btn-danger">
+                                <a onclick="ConfirmDelete(@item.Id)">Delete <i class="glyphicon-trash"></i>  </a>
+
+                            </b>
+                        </td>
 
 
-                        </tr>
-                                }
-                </tbody>
+                    </tr>
+                }
+            </tbody>
         </table>
+   
     </div>
     <div class="modal fade" id="myModal">
         <div class="modal-dialog">

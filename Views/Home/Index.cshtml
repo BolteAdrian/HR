@@ -1,19 +1,38 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
+
+    <head >
+    <style >
+    body {
+        background-image: url("https://cutewallpaper.org/21/background-image-png/Entry-4-by-mmhyder-for-Background-PNG-Image-Freelancer.jpg");
+        background-color: #cccccc;
+        margin: 1em;
+        margin: -3px;
+        border: 1px solid #4CAF50;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+</style>
+</head>
 <div class="jumbotron text-center">
     <h1>Welcome To HR application!</h1>
 </div>
 
-<div class="text-center">
+<div class="text-center" style="margin-top: -20px; ">
 
-    <img src="https://edsurge.imgix.net/uploads/post/image/12540/shutterstock_583636588-1566521038.jpg?auto=compress%2Cformat&w=1024&h=512&fit=crop"  width="350" height="250">
-    
+    <img src="https://edsurge.imgix.net/uploads/post/image/12540/shutterstock_583636588-1566521038.jpg?auto=compress%2Cformat&w=1024&h=512&fit=crop" alt="" padding: 5px; style="width:350px;height:250px;border:3px solid purple; vertical-align:middle;margin:0px 50px">
+
 </div>
 
 
-<div class="text-center">
+<div class="text-center"style="margin-top: -10px;">
 
     <p></p>
 
@@ -22,8 +41,8 @@
 
     <input class="btn btn-success text-white" type="button" value="Interviews" onclick="location.href='@Url.Action("Index", "InterviewCvs")'" />
 
- 
-    
+
+
     <div class="text-center">
         <p></p>
     </div>

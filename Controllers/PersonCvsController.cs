@@ -315,6 +315,7 @@ namespace HR.Controllers
                 {
                     workbook.SaveAs(stream);
                     var content = stream.ToArray();
+                  
                     return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CV.xlsx");
                 }
 
@@ -601,8 +602,8 @@ namespace HR.Controllers
                 await _context.SaveChangesAsync();
            
             }
-
-return RedirectToAction(nameof(Index));
+          
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -659,6 +660,7 @@ return RedirectToAction(nameof(Index));
                         throw;
                     }
                 }
+              
                 return RedirectToAction(nameof(Index));
             }
             return View(personCv);

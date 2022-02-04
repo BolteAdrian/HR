@@ -186,7 +186,7 @@ namespace HR.Controllers
             }
             
             _context.SaveChanges();
-
+            
             return Json(result);
         }
 
@@ -221,7 +221,7 @@ namespace HR.Controllers
 
 
 
-        public double percente(List<Multi> M)
+        public string percente(List<Multi> M)
         {
             int contor = 0;
             int contor2 = 0;
@@ -236,8 +236,11 @@ namespace HR.Controllers
             }
 
             double value = ((double)contor2 / (double)contor) * 100.0;
+            string aux = value.ToString();
 
-            return value;
+            string extracted = aux.Substring(0, 4);
+
+            return extracted;
         }
 
 
@@ -410,7 +413,7 @@ namespace HR.Controllers
                     _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CV.InterviewTeam ON;");
                     await _context.SaveChangesAsync();
                     _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CV.InterviewTeam OFF;");
-
+                   
 
                     transaction.Commit();
             }
@@ -463,8 +466,8 @@ namespace HR.Controllers
                         t.InterviewCvid = i.Id;
                         _context.InterviewTeam.Update(t);
                         await _context.SaveChangesAsync();
-
-                    }
+                   
+                }
                     catch
                     {
                         if (!InterviewTeamExists(id) && InterviewCvExists(id))
@@ -614,7 +617,7 @@ namespace HR.Controllers
     };
 
 
-             ViewData["Procent"]= (float)percente(_multitable);
+             ViewData["Procent"]= percente(_multitable);
 
 
             return View(model);

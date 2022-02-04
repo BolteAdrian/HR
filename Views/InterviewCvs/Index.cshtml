@@ -15,6 +15,17 @@
 
 <br />
 
+
+<style>
+    .table th,
+    .table td {
+        padding: 0.33rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+</style>
+
+
 <form method="get" class="form-inline">
     <input name="filter" class="form-control" placeholder=""
            value="@Model.RouteValue["Filter"]" />
@@ -51,7 +62,7 @@
 
             <div class="" style="width:40%;margin-top:2%">
                 <div id="printableArea">
-                    <table class="table table-bordered ">
+                    <table class="table table-bordered " style="margin-top: 10px;  margin-left: -85px;">
                         <thead class="thead-dark">
                             <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
 
@@ -63,7 +74,6 @@
                                 <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.EmployeeName, this.Model)</b></th>
                                 <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.TestResult, this.Model)</b></th>
                                 <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Accepted, this.Model)</b></th>
-                                @*<th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Refused Reason</b></th>*@
                                 <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Observation, this.Model) </b></th>
                                 <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.DateAnswer, this.Model)</b></th>
                                 <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.OffertStatus, this.Model) </b></th>
@@ -79,7 +89,22 @@
                                     <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Name</td>
 
 
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.InterviewDate</td>
+
+                                    @{
+
+
+                                        var dateTimeNow = (DateTime)item.InterviewDate;
+                                        var dateOnlyString = dateTimeNow.ToShortDateString();
+
+                                        var dateTimeNow2 = (DateTime)item.DateAnswer;
+                                        var dateOnlyString2 = dateTimeNow2.ToShortDateString();
+
+
+
+                                    }
+
+
+                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@dateOnlyString</td>
 
 
 
@@ -102,24 +127,6 @@
                                         </td>
                                     }
 
-                                    @*@if (item.RefusedReason == 1)
-                                        {
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                        Refused Test
-                                    </td>
-                                        }
-                                        else if (item.RefusedReason == 2)
-                                        {
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                        Refused interview
-                                    </td>
-                                        }
-                                        else
-                            {
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                        -
-                                    </td>
-                            }*@
 
 
 
@@ -128,7 +135,7 @@
 
 
 
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.DateAnswer</td>
+                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@dateOnlyString2</td>
 
 
 
@@ -149,6 +156,7 @@
 
 
                                     <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmploymentDate</td>
+
                                     <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
                                         <div class="w3-show-inline-block">
                                             <div class="w3-bar">
@@ -222,7 +230,7 @@
 
 
             </div>
-
+           
         </body>
     </html>
 
