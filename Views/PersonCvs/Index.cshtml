@@ -7,7 +7,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+@if (TempData["AlertMessage"] != null)
+{
+
+<p class="alert alert-success" id="successMessage">@TempData["AlertMessage"]</p>
+
+}
+
 <h1>CVs</h1>
+
 
 
 <input type="button" value="Add Person" class="btn btn-success text-white" onclick="location.href='@Url.Action("Create", "PersonCvs")'" />
@@ -16,7 +25,15 @@
 
 <br>
 
-
+<style>
+    body {
+        background-image: url("https://cutewallpaper.org/21/background-image-png/Magically-Remove-Image-Backgrounds-Clipping-Magic.png");
+        background-color: #cccccc;
+        margin: 1em;
+        margin: -3px;
+        border: 1px solid #4CAF50;
+    }
+</style>
 
 <form method="get" class="form-inline">
     <input name="filter" class="form-control" placeholder=""
@@ -51,7 +68,7 @@
 
 <div class="" style="width:40%;margin-top:2%">
     <div id="printableArea">
-        <table class="table table-bordered ">
+        <table class="table table-bordered " bgcolor="white" style="  margin-left: -25px;">
             <thead class="thead-dark">
                 <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
                     <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
@@ -204,7 +221,7 @@
                 }
             </tbody>
         </table>
-   
+
     </div>
     <div class="modal fade" id="myModal">
         <div class="modal-dialog">

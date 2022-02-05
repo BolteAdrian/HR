@@ -68,6 +68,7 @@ namespace HR.Controllers
 
                 _context.Functions.Remove(d);
                 _context.SaveChanges();
+                TempData["AlertMessage"] = "Deleted with success";
             }
             catch { }
 
@@ -95,6 +96,7 @@ namespace HR.Controllers
             {
                 _context.Add(functions);
                 await _context.SaveChangesAsync();
+                TempData["AlertMessage"] = "Inserted with success";
                 return RedirectToAction(nameof(Index));
             }
             return View(functions);
@@ -136,6 +138,7 @@ namespace HR.Controllers
                 {
                     _context.Update(functions);
                     await _context.SaveChangesAsync();
+                    TempData["AlertMessage"] = "Updated with success";
                 }
                 catch (DbUpdateConcurrencyException)
                 {

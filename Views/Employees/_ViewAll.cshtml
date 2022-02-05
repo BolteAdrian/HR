@@ -8,8 +8,22 @@
     ViewBag.Title = "Index";
 
 }
-<h1>Employees </h1>
+@if (TempData["AlertMessage"] != null)
+{
 
+    <p class="alert alert-success" id="successMessage">@TempData["AlertMessage"]</p>
+
+}
+<h1>Employees </h1>
+<style>
+    body {
+        background-image: url("https://cutewallpaper.org/21/background-image-png/Magically-Remove-Image-Backgrounds-Clipping-Magic.png");
+        background-color: #cccccc;
+        margin: 1em;
+        margin: -3px;
+        border: 1px solid #4CAF50;
+    }
+</style>
 <a onclick="showInPopup('@Url.Action("AddOrEdit","Employees",null,Context.Request.Scheme)','New Employees')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Employees</a>
 
 <form method="get" class="form-inline">
@@ -26,7 +40,7 @@
 <div class="text-right">
     <a onclick="showInPopup('@Url.Action("Index","SentEmail",null,Context.Request.Scheme)','Email')" class="btn btn-success text-white"><i class="fas fa-random"></i> Email</a>
     <br>
-    <form  method="post" asp-controller="Employees" asp-action="ExportToExcel">
+    <form method="post" asp-controller="Employees" asp-action="ExportToExcel">
         <input type="submit" value="Export To Excel" />
     </form>
 </div>
@@ -37,7 +51,7 @@
 
 <div class="" style="width:40%;margin-top:2%">
     <div id="printableArea">
-        <table class="table table-bordered ">
+        <table class="table table-bordered " bgcolor="white">
             <thead class="thead-dark">
                 <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
                     <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">@Html.SortableHeaderFor(model => model.EmployeeId, this.Model)</th>
@@ -109,46 +123,46 @@
                 }
             </tbody>
         </table>
-        </div>
+    </div>
 
-        <div class="modal fade" id="myModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
 
-                    <div class="modal-header">
-                        <a href="#" class="close" data-dismiss="modal">&times;</a>
-                        <h3 class="modal-title">Delete </h3>
-                    </div>
-                    <div class="modal-body">
-                        <h4>Are you sure ? You want to delete this. </h4>
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h3 class="modal-title">Delete </h3>
+                </div>
+                <div class="modal-body">
+                    <h4>Are you sure ? You want to delete this. </h4>
 
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                        <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
-                    </div>
-
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                    <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
                 </div>
 
             </div>
 
         </div>
 
-        <input type="hidden" id="hiddenId" />
-
     </div>
 
+    <input type="hidden" id="hiddenId" />
+
+</div>
 
 
-    <nav aria-label="Suppliers navigation example">
-        <vc:pager paging-list="@Model" />
-    </nav>
 
-    <input type="button" value="Back" onclick="location.href='@Url.Action("Index", "InterviewCvs")'" />
+<nav aria-label="Suppliers navigation example">
+    <vc:pager paging-list="@Model" />
+</nav>
+
+<input type="button" value="Back" onclick="location.href='@Url.Action("Index", "InterviewCvs")'" />
 
 
-    <script>
+<script>
 
 
     var ConfirmDelete = function (Id) {
@@ -195,4 +209,4 @@
             WinPrint.print();
             WinPrint.close();
         }
-    </script>
+</script>

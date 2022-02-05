@@ -216,6 +216,7 @@ namespace HR.Controllers
                         }
 
                         _context.InterviewCv.Remove(item);
+
                     }
                 }
             }
@@ -223,8 +224,8 @@ namespace HR.Controllers
             DeleteEmployee2(EmployeeId);
                 _context.PersonCv.Remove(s);
             _context.SaveChanges();
-            //TODO: inactivare interview team si interview dupa scaffold
-
+        
+            TempData["AlertMessage"] = "Deleted with success";
             return Json(result);
 
         }
@@ -460,7 +461,7 @@ namespace HR.Controllers
                     {
                         // If file found, delete it    
                         System.IO.File.Delete(Path.Combine(rootFolder, authorsFile));
-
+                        TempData["AlertMessage"] = "Deleted with success";
                     }
 
                 }
@@ -600,7 +601,7 @@ namespace HR.Controllers
                 d.PersonCvid = aux2;
                 _context.Documents.AddRange(d);
                 await _context.SaveChangesAsync();
-           
+                TempData["AlertMessage"] = "Person added successfully";
             }
           
             return RedirectToAction(nameof(Index));
@@ -648,6 +649,7 @@ namespace HR.Controllers
                 {
                     _context.Update(personCv);
                     await _context.SaveChangesAsync();
+                    TempData["AlertMessage"] = "Person updated successfully";
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -6,6 +6,13 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+@if (TempData["AlertMessage"] != null)
+{
+
+    <p class="alert alert-success" id="successMessage">@TempData["AlertMessage"]</p>
+
+}
 <h2>Interviews </h2>
 
 
@@ -17,6 +24,14 @@
 
 
 <style>
+    body {
+        background-image: url("https://cutewallpaper.org/21/background-image-png/Magically-Remove-Image-Backgrounds-Clipping-Magic.png");
+        background-color: #cccccc;
+        margin: 1em;
+        margin: -3px;
+        border: 1px solid #4CAF50;
+    }
+
     .table th,
     .table td {
         padding: 0.33rem;
@@ -41,7 +56,7 @@
 <div class="text-right">
     <a onclick="showInPopup('@Url.Action("Index","SentEmail",null,Context.Request.Scheme)','Email')" class="btn btn-success text-white"><i class="fas fa-random"></i> Email</a>
     <br>
-    <form  method="post" asp-controller="InterviewCvs" asp-action="ExportToExcel">
+    <form method="post" asp-controller="InterviewCvs" asp-action="ExportToExcel">
         <input type="submit" value="Export To Excel" />
     </form>
 </div>
@@ -52,193 +67,193 @@
 </div>
 <div class="text-right">
     <input type="button" value="Statistics" class="btn btn-success text-white" onclick="location.href='@Url.Action("Statistics", "InterviewCvs")'" />
-      <p>Procent angajari:</p>
+    <p>Procent angajari:</p>
     @ViewBag.Procent%
 </div>
 
-        <html>
+<html>
 
-        <body>
+<body>
 
-            <div class="" style="width:40%;margin-top:2%">
-                <div id="printableArea">
-                    <table class="table table-bordered " style="margin-top: 10px;  margin-left: -85px;">
-                        <thead class="thead-dark">
-                            <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+    <div class="" style="width:40%;margin-top:2%">
+        <div id="printableArea">
+            <table class="table table-bordered " bgcolor="white" style="margin-top: 10px;  margin-left: -85px;">
+                <thead class="thead-dark">
+                    <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
 
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Id, this.Model)</b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Name, this.Model)</b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.InterviewDate, this.Model)</b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.NameFunction, this.Model)</b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.NameDepartment, this.Model)</b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.EmployeeName, this.Model)</b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.TestResult, this.Model)</b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Accepted, this.Model)</b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Observation, this.Model) </b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.DateAnswer, this.Model)</b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.OffertStatus, this.Model) </b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.EmploymentDate, this.Model)</b></th>
-                                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Actions</b></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr id="row_@item.Id" style=" border: 2px solid #999">
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Id</td>
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Name</td>
-
-
-
-                                    @{
-
-
-                                        var dateTimeNow = (DateTime)item.InterviewDate;
-                                        var dateOnlyString = dateTimeNow.ToShortDateString();
-
-                                        var dateTimeNow2 = (DateTime)item.DateAnswer;
-                                        var dateOnlyString2 = dateTimeNow2.ToShortDateString();
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Id, this.Model)</b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Name, this.Model)</b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.InterviewDate, this.Model)</b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.NameFunction, this.Model)</b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.NameDepartment, this.Model)</b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.EmployeeName, this.Model)</b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.TestResult, this.Model)</b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Accepted, this.Model)</b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.Observation, this.Model) </b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.DateAnswer, this.Model)</b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.OffertStatus, this.Model) </b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>@Html.SortableHeaderFor(model => model.EmploymentDate, this.Model)</b></th>
+                        <th style=" border: 2px solid #999; text-align: center; vertical-align: middle; "><b>Actions</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.Id" style=" border: 2px solid #999">
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Id</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Name</td>
 
 
 
-                                    }
+                            @{
 
 
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@dateOnlyString</td>
+                                var dateTimeNow = (DateTime)item.InterviewDate;
+                                var dateOnlyString = dateTimeNow.ToShortDateString();
 
-
-
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.NameFunction</td>
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.NameDepartment</td>
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmployeeName </td>
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.TestResult</td>
-
-
-                                    @if (item.Accepted == false)
-                                    {
-                                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                            No
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                            Yes
-                                        </td>
-                                    }
+                                var dateTimeNow2 = (DateTime)item.DateAnswer;
+                                var dateOnlyString2 = dateTimeNow2.ToShortDateString();
 
 
 
-
-
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Comments</td>
-
-
-
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@dateOnlyString2</td>
-
-
-
-
-
-                                    @if (item.OffertStatus == 2)
-                                    {
-                                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                            Refused
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                            Signed
-                                        </td>
-                                    }
-
-
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmploymentDate</td>
-
-                                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                        <div class="w3-show-inline-block">
-                                            <div class="w3-bar">
-
-                                                <input type="button" value="Edit" class="btn btn-info text-white" onclick="location.href='@Url.Action("Interview", "InterviewCvs", new {id=item.Id})'" />
-
-
-                                                <b class="btn btn-danger">
-                                                    <a onclick="ConfirmDelete(@item.Id)">Delete <i class="glyphicon-trash"></i>  </a>
-                                                </b>
-
-
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
                             }
-                        </tbody>
 
 
-                    </table>
-                </div>
-
-                <div class="modal fade" id="myModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@dateOnlyString</td>
 
 
-                            <div class="modal-header">
-                                <a href="#" class="close" data-dismiss="modal">&times;</a>
-                                <h3 class="modal-title">Delete interview</h3>
-                            </div>
-                            <div class="modal-body">
-                                <h4>Are you sure ? You want to delete this. </h4>
 
-                            </div>
-                            <div class="modal-footer">
-                                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                                <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
-                            </div>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.NameFunction</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.NameDepartment</td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmployeeName </td>
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.TestResult</td>
 
-                        </div>
 
+                            @if (item.Accepted == false)
+                            {
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    No
+                                </td>
+                            }
+                            else
+                            {
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    Yes
+                                </td>
+                            }
+
+
+
+
+
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.Comments</td>
+
+
+
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@dateOnlyString2</td>
+
+
+
+
+
+                            @if (item.OffertStatus == 2)
+                            {
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    Refused
+                                </td>
+                            }
+                            else
+                            {
+                                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                    Signed
+                                </td>
+                            }
+
+
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">@item.EmploymentDate</td>
+
+                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
+                                <div class="w3-show-inline-block">
+                                    <div class="w3-bar">
+
+                                        <input type="button" value="Edit" class="btn btn-info text-white" onclick="location.href='@Url.Action("Interview", "InterviewCvs", new {id=item.Id})'" />
+
+
+                                        <b class="btn btn-danger">
+                                            <a onclick="ConfirmDelete(@item.Id)">Delete <i class="glyphicon-trash"></i>  </a>
+                                        </b>
+
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+
+            </table>
+        </div>
+
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h3 class="modal-title">Delete interview</h3>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are you sure ? You want to delete this. </h4>
+
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                        <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
                     </div>
 
                 </div>
-
-                <input type="hidden" id="hiddenId" />
-
-
-
-                <div class="modal" tabindex="-1" role="dialog" id="form-modal">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title"></h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
 
             </div>
-           
-        </body>
-    </html>
 
-    <nav aria-label="Suppliers navigation example">
-        <vc:pager paging-list="@Model" />
-    </nav>
+        </div>
 
-    <script>
+        <input type="hidden" id="hiddenId" />
+
+
+
+        <div class="modal" tabindex="-1" role="dialog" id="form-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+</body>
+</html>
+
+<nav aria-label="Suppliers navigation example">
+    <vc:pager paging-list="@Model" />
+</nav>
+
+<script>
 
 
     var ConfirmDelete = function (Id) {
@@ -286,9 +301,9 @@
             WinPrint.print();
             WinPrint.close();
         }
-    </script>
+</script>
 
 
 
 
-    <input type="button" value="Back" onclick="location.href='@Url.Action("Index", "Home")'" />
+<input type="button" value="Back" onclick="location.href='@Url.Action("Index", "Home")'" />

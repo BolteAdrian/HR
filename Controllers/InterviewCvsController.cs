@@ -186,7 +186,7 @@ namespace HR.Controllers
             }
             
             _context.SaveChanges();
-            
+            TempData["AlertMessage"] = "Deleted with success";
             return Json(result);
         }
 
@@ -215,7 +215,7 @@ namespace HR.Controllers
             }
 
             _context.SaveChanges();
-
+            TempData["AlertMessage"] = "Deleted with success";
             return Json(result);
         }
 
@@ -266,6 +266,7 @@ namespace HR.Controllers
                 _context.SaveChanges();
             }
             _context.SaveChanges();
+            TempData["AlertMessage"] = "Deleted with success";
             return Json(result);
         }
 
@@ -416,7 +417,8 @@ namespace HR.Controllers
                    
 
                     transaction.Commit();
-            }
+                    TempData["AlertMessage"] = "Interview inserted with success";
+                }
 
         }
                 //Update
@@ -466,7 +468,7 @@ namespace HR.Controllers
                         t.InterviewCvid = i.Id;
                         _context.InterviewTeam.Update(t);
                         await _context.SaveChangesAsync();
-                   
+                    TempData["AlertMessage"] = "Interview updated with success";
                 }
                     catch
                     {

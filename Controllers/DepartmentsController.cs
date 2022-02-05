@@ -99,7 +99,7 @@ namespace HR.Controllers
                     await _context.SaveChangesAsync();
 
 
-
+                    TempData["AlertMessage"] = "Inserted with success";
 
                 }
                 //Update
@@ -110,6 +110,7 @@ namespace HR.Controllers
                     {
                         _context.Update(departments);
                         await _context.SaveChangesAsync();
+                        TempData["AlertMessage"] = "Updated with success";
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -151,6 +152,7 @@ namespace HR.Controllers
                 }
                 _context.Departments.Remove(d);
                 _context.SaveChanges();
+                TempData["AlertMessage"] = "Deleted with success";
             }
             catch { }
 

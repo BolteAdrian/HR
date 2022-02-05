@@ -109,8 +109,8 @@ namespace HR_CV.Controllers
                         _context.Employee.AddRange(e);
                        
                         await _context.SaveChangesAsync();
-                       
-                      
+                    TempData["AlertMessage"] = "Inserted with success";
+
 
 
                 }
@@ -122,6 +122,7 @@ namespace HR_CV.Controllers
                     {
                         _context.Update(employee);
                         await _context.SaveChangesAsync();
+                        TempData["AlertMessage"] = "Updated with success";
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -326,6 +327,7 @@ namespace HR_CV.Controllers
 
                 _context.Employee.Remove(employee);
                 _context.SaveChanges();
+                TempData["AlertMessage"] = "Deleted with success";
             }
             catch { }
 
