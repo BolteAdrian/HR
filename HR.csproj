@@ -4,6 +4,12 @@
     <UserSecretsId>aspnet-HR-96843706-0C07-4111-B716-306125539AE6</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Licenta\**" />
+    <Content Remove="Licenta\**" />
+    <EmbeddedResource Remove="Licenta\**" />
+    <None Remove="Licenta\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Views\Employees\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

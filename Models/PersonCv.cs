@@ -18,17 +18,21 @@ namespace HR.Models
         public long Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
         public DateTime? DateApply { get; set; }
+        [Required]
         public long? FunctionApply { get; set; }
         public long? FunctionMatch { get; set; }
         public string Observation { get; set; }
+       
+        public string Experience { get; set; }
+      
+        public string Studies { get; set; }
+     
         public int? ModeApply { get; set; }
         [Required]
         public string CountyAddress { get; set; }
         [Required]
         public string CityAddress { get; set; }
-        [Required]
         public DateTime? BirthDate { get; set; }
         public int? Age { get; set; }
         public string AddedBy { get; set; }

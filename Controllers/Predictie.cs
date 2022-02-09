@@ -84,10 +84,12 @@ namespace HR.Controllers
 
 
                     }
+                    
                         aux.ModeApply = (float)input.ModeApply;
-
-
-                        ModeIn.Add(aux);
+                    aux.Studies = input.Studies;
+                    aux.Experience = input.Experience;
+                    aux.Observation = input.Observation;
+                    ModeIn.Add(aux);
                     
                 }
                 else

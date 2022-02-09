@@ -9,19 +9,20 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace HR.Models
 {
-    public partial class modelContext : IdentityDbContext
-    {
-        public modelContext()
+    
+        public partial class modelContext : IdentityDbContext
         {
-        }
+            public modelContext()
+            {
+            }
 
-        public modelContext(DbContextOptions<modelContext> options)
-            : base(options)
-        {
-        }
+            public modelContext(DbContextOptions<modelContext> options)
+                : base(options)
+            {
+            }
 
 
-      
+
         public virtual DbSet<Auxi> Auxi { get; set; }
         public virtual DbSet<Departments> Departments { get; set; }
         public virtual DbSet<Documents> Documents { get; set; }
@@ -31,6 +32,7 @@ namespace HR.Models
         public virtual DbSet<InterviewTeam> InterviewTeam { get; set; }
         public virtual DbSet<Multi> Multi { get; set; }
         public virtual DbSet<PersonCv> PersonCv { get; set; }
+        public virtual DbSet<Prediction> Prediction { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -44,8 +46,8 @@ namespace HR.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-         
 
+          
             modelBuilder.Entity<Auxi>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
@@ -240,6 +242,8 @@ namespace HR.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Observation).HasMaxLength(500);
+
                 entity.Property(e => e.TestResult).HasMaxLength(200);
             });
 
@@ -263,15 +267,50 @@ namespace HR.Models
 
                 entity.Property(e => e.DateApply).HasColumnType("datetime");
 
+                entity.Property(e => e.Experience).HasMaxLength(500);
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(200);
 
                 entity.Property(e => e.Observation).HasMaxLength(500);
 
+                entity.Property(e => e.Studies).HasMaxLength(500);
+
                 entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Prediction>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("Prediction");
+
+                entity.Property(e => e.BirthDate).HasColumnType("date");
+
+                entity.Property(e => e.Experience).HasMaxLength(500);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.NameDepartment)
+                    .IsRequired()
+                    .HasColumnName("name_department")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NameFunction)
+                    .IsRequired()
+                    .HasColumnName("name_function")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Observation).HasMaxLength(500);
+
+                entity.Property(e => e.Studies).HasMaxLength(500);
             });
 
             OnModelCreatingPartial(modelBuilder);

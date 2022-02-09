@@ -234,13 +234,15 @@ namespace HR.Controllers
                     contor2++;
                 }
             }
-
+            string extracted;
             double value = ((double)contor2 / (double)contor) * 100.0;
             string aux = value.ToString();
-
-            string extracted = aux.Substring(0, 4);
-
-            return extracted;
+            //if (contor != 0 && contor2 !=0)
+            //{
+            //     extracted = aux.Substring(0, 4);
+            //}
+            // extracted = null;
+            return aux;
         }
 
 
@@ -618,9 +620,9 @@ namespace HR.Controllers
         { "filter", filter}
     };
 
-
-             ViewData["Procent"]= percente(_multitable);
-
+          
+                ViewData["Procent"] = percente(_multitable);
+          
 
             return View(model);
         }

@@ -65,10 +65,20 @@
 
     <a class="btn btn-success text-white" href="javascript:void(0);" onclick="printPageArea('printableArea')">Print</a>
 </div>
+
+
+
+
+
 <div class="text-right">
     <input type="button" value="Statistics" class="btn btn-success text-white" onclick="location.href='@Url.Action("Statistics", "InterviewCvs")'" />
+   @if (ViewBag.Procent != null) {
+
+
     <p>Procent angajari:</p>
-    @ViewBag.Procent%
+    <p>@ViewBag.Procent%</p>
+                    
+                    }
 </div>
 
 <html>

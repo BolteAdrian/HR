@@ -249,12 +249,15 @@ namespace HR.Controllers
                 worksheet.Cell(currentRow, 2).Value = "Name";
                 worksheet.Cell(currentRow, 3).Value = "DateApply";
                 worksheet.Cell(currentRow, 4).Value = "FunctionApply";
-                worksheet.Cell(currentRow, 5).Value = "Observation";
-                worksheet.Cell(currentRow, 6).Value = "ModeApply";
-                worksheet.Cell(currentRow, 7).Value = "CountyAddress";
-                worksheet.Cell(currentRow, 8).Value = "CityAddress";
-                worksheet.Cell(currentRow, 9).Value = "BirthDate";
-                worksheet.Cell(currentRow, 10).Value = "Status";
+                worksheet.Cell(currentRow, 5).Value = "FunctionMatch";
+                worksheet.Cell(currentRow, 6).Value = "Studies";
+                worksheet.Cell(currentRow, 7).Value = "Experience";
+                worksheet.Cell(currentRow, 8).Value = "Observation";
+                worksheet.Cell(currentRow, 9).Value = "ModeApply";
+                worksheet.Cell(currentRow, 10).Value = "CountyAddress";
+                worksheet.Cell(currentRow, 11).Value = "CityAddress";
+                worksheet.Cell(currentRow, 12).Value = "BirthDate";
+                worksheet.Cell(currentRow, 13).Value = "Status";
 
                 List<PersonCv> pe = _context.PersonCv.ToList();
 
@@ -277,37 +280,37 @@ namespace HR.Controllers
 
                         if (x.FunctionMatch == f.Id)
                         {
-                            worksheet.Cell(currentRow, 4).Value = f.NameFunction;
+                            worksheet.Cell(currentRow, 5).Value = f.NameFunction;
                         }
 
 
                     }
 
-                    
 
-                    
-                    worksheet.Cell(currentRow, 5).Value = x.Observation;
+                    worksheet.Cell(currentRow, 6).Value = x.Studies;
+                    worksheet.Cell(currentRow, 7).Value = x.Experience;
+                    worksheet.Cell(currentRow, 8).Value = x.Observation;
                     if (x.ModeApply == 2)
                     {
-                        worksheet.Cell(currentRow, 6).Value = "Paper";
+                        worksheet.Cell(currentRow, 9).Value = "Paper";
                     }
-                    else  worksheet.Cell(currentRow, 6).Value = "Email";
+                    else  worksheet.Cell(currentRow, 9).Value = "Email";
                     
 
                     var dateTimeNow = (DateTime)x.BirthDate;
                     var dateOnlyString = dateTimeNow.ToShortDateString();
 
-                    worksheet.Cell(currentRow, 7).Value = x.CountyAddress;
-                    worksheet.Cell(currentRow, 8).Value = x.CityAddress;
-                    worksheet.Cell(currentRow, 9).Value = Convert.ToString(dateOnlyString);
+                    worksheet.Cell(currentRow, 10).Value = x.CountyAddress;
+                    worksheet.Cell(currentRow, 11).Value = x.CityAddress;
+                    worksheet.Cell(currentRow, 12).Value = Convert.ToString(dateOnlyString);
 
                    
 
                     if (x.Status == 2)
                     {
-                        worksheet.Cell(currentRow, 10).Value = "Inactive";
+                        worksheet.Cell(currentRow, 13).Value = "Inactive";
                     }
-                    else  worksheet.Cell(currentRow, 10).Value = "Active";
+                    else  worksheet.Cell(currentRow, 13).Value = "Active";
                     
 
 
@@ -548,7 +551,7 @@ namespace HR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,DateApply,FunctionApply,FunctionMatch,Observation,ModeApply,CountyAddress,CityAddress,BirthDate")] PersonCv m)
+        public async Task<IActionResult> Create([Bind("Id,Name,DateApply,FunctionApply,FunctionMatch,Observation,ModeApply,CountyAddress,CityAddress,BirthDate,Studies,Experience")] PersonCv m)
         {
 
             List<long> Tablou = _context.PersonCv
@@ -576,7 +579,8 @@ namespace HR.Controllers
                 personCv.CityAddress = m.CityAddress;
                 personCv.BirthDate = dt.Date;
                 personCv.Status = m.Status;
-
+                personCv.Experience = m.Experience;
+                personCv.Studies = m.Studies;
 
 
 
@@ -636,7 +640,7 @@ namespace HR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,DateApply,FunctionApply,FunctionMatch,Observation,ModeApply,CountyAddress,CityAddress,BirthDate,Age,AddedBy,AddedAt,UpdatedBy,UpdatedAt,Status,CvreciveDate")] PersonCv personCv)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,DateApply,FunctionApply,FunctionMatch,Observation,ModeApply,CountyAddress,CityAddress,BirthDate,Age,AddedBy,AddedAt,UpdatedBy,UpdatedAt,Status,CvreciveDate,Studies,Experience")] PersonCv personCv)
         {
             if (id != personCv.Id)
             {
