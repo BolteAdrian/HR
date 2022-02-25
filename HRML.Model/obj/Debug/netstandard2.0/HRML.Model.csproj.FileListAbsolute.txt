@@ -1,0 +1,20 @@
+C:\Users\Adi\Desktop\Licenta\HRML.Model\bin\Debug\netstandard2.0\MLModel.zip
+C:\Users\Adi\Desktop\Licenta\HRML.Model\bin\Debug\netstandard2.0\HRML.Model.deps.json
+C:\Users\Adi\Desktop\Licenta\HRML.Model\bin\Debug\netstandard2.0\HRML.Model.dll
+C:\Users\Adi\Desktop\Licenta\HRML.Model\bin\Debug\netstandard2.0\HRML.Model.pdb
+C:\Users\Adi\Desktop\Licenta\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.csproj.AssemblyReference.cache
+C:\Users\Adi\Desktop\Licenta\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.AssemblyInfoInputs.cache
+C:\Users\Adi\Desktop\Licenta\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.AssemblyInfo.cs
+C:\Users\Adi\Desktop\Licenta\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.csproj.CoreCompileInputs.cache
+C:\Users\Adi\Desktop\Licenta\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.dll
+C:\Users\Adi\Desktop\Licenta\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.pdb
+C:\Users\Adi\Desktop\Licenta - Copy\HRML.Model\bin\Debug\netstandard2.0\MLModel.zip
+C:\Users\Adi\Desktop\Licenta - Copy\HRML.Model\bin\Debug\netstandard2.0\HRML.Model.deps.json
+C:\Users\Adi\Desktop\Licenta - Copy\HRML.Model\bin\Debug\netstandard2.0\HRML.Model.dll
+C:\Users\Adi\Desktop\Licenta - Copy\HRML.Model\bin\Debug\netstandard2.0\HRML.Model.pdb
+C:\Users\Adi\Desktop\Licenta - Copy\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.AssemblyInfoInputs.cache
+C:\Users\Adi\Desktop\Licenta - Copy\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.AssemblyInfo.cs
+C:\Users\Adi\Desktop\Licenta - Copy\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.csproj.CoreCompileInputs.cache
+C:\Users\Adi\Desktop\Licenta - Copy\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.dll
+C:\Users\Adi\Desktop\Licenta - Copy\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.pdb
+C:\Users\Adi\Desktop\Licenta - Copy\HRML.Model\obj\Debug\netstandard2.0\HRML.Model.csproj.AssemblyReference.cache
