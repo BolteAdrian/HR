@@ -1,165 +1,36 @@
-﻿
-
-@model ReflectionIT.Mvc.Paging.PagingList<HR.Models.Functions>
-@using ReflectionIT.Mvc.Paging
-@addTagHelper *, ReflectionIT.Mvc.Paging
+﻿@model IEnumerable<HR.Models.Functions>
 
 @{
     ViewBag.Title = "Index";
-
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (TempData["AlertMessage"] != null)
-{
-
-    <p class="alert alert-success" id="successMessage">@TempData["AlertMessage"]</p>
-
-}
-<h1>Functions </h1>
-<style>
-    body {
-        background-image: url("https://cutewallpaper.org/21/background-image-png/Magically-Remove-Image-Backgrounds-Clipping-Magic.png");
-        background-color: #cccccc;
-        margin: 1em;
-        margin: -3px;
-        border: 1px solid #4CAF50;
-    }
-</style>
-
-<p>
-
-    <input class="btn btn-success text-white" value="Add new Function" onclick="location.href='@Url.Action("Create", "Functions")'" />
-
-</p>
-
-<form method="get" class="form-inline">
-    <input name="filter" class="form-control" placeholder=""
-           value="@Model.RouteValue["Filter"]" />
-    <button type="submit" class="btn btn-info">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
-    </button>
-    <br />
-    <a asp-action="Index">     Get All Interviews</a>
-</form>
 
 
-<div class="" style="width:40%;margin-top:2%">
-    <table class="table table-bordered " bgcolor="white">
-        <thead class="thead-dark">
-            <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">@Html.SortableHeaderFor(model => model.Id, this.Model)</th>
 
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">@Html.SortableHeaderFor(model => model.NameFunction, this.Model)</th>
+<div id="view-all">
+    @await Html.PartialAsync("_ViewAll", Model)
+</div>
 
-                <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;"> @Html.SortableHeaderFor(model => model.IdDepartment)</th>
-                <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                    Actions
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr id="row_@item.Id" style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                        @Html.DisplayFor(modelItem => item.NameFunction)
-                    </td>
-
-                    @foreach (var f in (List<Departments>)ViewBag.IdDepartment)
-                    {
-                        @if (item.IdDepartment == f.Id)
-                        {
+@*@section Scripts{
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@
 
 
-                            <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                                @f.NameDepartment
-                            </td>
-                        }
-                    }
-
-                    <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        <a class="btn btn-info text-white" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                        <b class="btn btn-danger"><a onclick="ConfirmDelete(@item.Id)"> Delete</a></b>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-
-                <div class="modal-header">
-                    <a href="#" class="close" data-dismiss="modal">&times;</a>
-                    <h3 class="modal-title">Delete </h3>
-                </div>
-                <div class="modal-body">
-                    <h4>Are you sure ? You want to delete this. </h4>
-
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                    <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
-                </div>
+<div class="modal" tabindex="-1" role="dialog" id="form-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
 
             </div>
-
         </div>
-
     </div>
-
-    <input type="hidden" id="hiddenId" />
-
 </div>
 
 
 
-<nav aria-label="Suppliers navigation example">
-    <vc:pager paging-list="@Model" />
-</nav>
-
-<input type="button" value="Back" onclick="location.href='@Url.Action("Index", "Departments")'" />
-
-
-<script>
-
-
-    var ConfirmDelete = function (Id) {
-
-        $("#hiddenId").val(Id);
-        $("#myModal").modal('show');
-
-    }
-
-    var DeleteEmployee = function () {
-
-        $("#loaderDiv").show();
-
-        var EmployeeId = $("#hiddenId").val();
-
-        $.ajax({
-
-
-            /*            url: "/InterviewCvs/DeleteEmployee",*/
-            url: '@Url.Action("DeleteEmployee", "Functions")/',
-            data: { EmployeeId: EmployeeId },
-            success: function (result) {
-                $("#loaderDiv").hide();
-                $("#myModal").modal("hide");
-                $("#row_" + EmployeeId).remove();
-
-            },
-            error: function (result) {
-                console.log(result
-                )
-            }
-
-        })
-
-    }
-</script>

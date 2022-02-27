@@ -86,7 +86,112 @@ namespace HR.Controllers
         // POST: Functions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
+
+
+
+
+
+
+
+        // GET: Transaction/AddOrEdit(Insert)
+        // GET: Transaction/AddOrEdit/5(Update)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddOrEdit(int id = 0)
+        {
+            if (id == 0) { 
+                ViewData["IdDepartment"] = new SelectList(_context.Departments, "Id", "NameDepartment");
+            return View(new Functions());
+            
+        }
+            else
+            {
+                var transactionModel = await _context.Functions.Where(x => x.Id == id).SingleOrDefaultAsync();
+
+                ViewData["IdDepartment"] = new SelectList(_context.Departments, "Id", "NameDepartment");
+                if (transactionModel == null)
+                {
+                    return NotFound();
+                }
+                return View(transactionModel);
+            }
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddOrEdit(int id, [Bind("Id, NameFunction, IdDepartment")] Functions function)
+        {
+            if (ModelState.IsValid)
+            {
+                //Insert
+                if (id == 0)
+                {
+                    List<long> Tablou = _context.Functions
+.Select(u => u.Id)
+.ToList();
+                    int aux2 = ((int)Tablou.LastOrDefault() + 1);
+                    using (var transaction = _context.Database.BeginTransaction())
+                    {
+
+                        Functions e = new Functions();
+                        e.Id = aux2;
+                    e.IdDepartment = function.IdDepartment;
+                        e.NameFunction = function.NameFunction;
+
+
+                        _context.Functions.AddRange(e);
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Functions ON;");
+                        await _context.SaveChangesAsync();
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Functions OFF;");
+                        transaction.Commit();
+                        
+
+
+                        TempData["AlertMessage"] = "Inserted with success";
+
+                    }
+                }
+                //Update
+                else
+                {
+
+                    try
+                    {
+
+                        _context.Update(function);
+                        await _context.SaveChangesAsync();
+                        TempData["AlertMessage"] = "Updated with success";
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!FunctionsExists(function.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+
+
+                }
+                return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Functions.ToList()) });
+            }
+            return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", function) });
+        }
+
+
+
+
+
+
+
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]

@@ -1,0 +1,40 @@
+﻿@model HR.Models.Functions
+
+@{
+    ViewData["Title"] = "Edit";
+
+}
+@{ Layout = null; }
+<h1>Functions</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col">
+        <form asp-action="AddOrEdit" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="NameFunction" class="control-label"></label>
+                        <input asp-for="NameFunction" class="form-control" />
+                        <span asp-validation-for="NameFunction" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="IdDepartment" class="control-label"></label>
+                        <select asp-for="IdDepartment" class="form-control" asp-items="ViewBag.IdDepartment"></select>
+                        <span asp-validation-for="IdDepartment" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Submit" class="btn btn-primary" />
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
