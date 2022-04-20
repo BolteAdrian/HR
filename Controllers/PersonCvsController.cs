@@ -497,7 +497,9 @@ namespace HR.Controllers
         {
             aux = PersonCVId;
             //var interviews = _context.InterviewCv.Where(x => x.Id == x.PersonCvid).ToList();
-            var interviews = _context.InterviewCv.Where(x => x.PersonCvid == PersonCVId).ToList();
+            //var interviews = _context.InterviewCv.Where(x => x.PersonCvid == PersonCVId).ToList();
+
+            var interviews = _context.Multi.AsNoTracking().Where(x => x.IdP == PersonCVId).ToList();
             //return new JsonConvert(DataSourceLoader.Load(interviews, loadOptions), "application/json");
             return Content(JsonConvert.SerializeObject(DataSourceLoader.Load(interviews, loadOptions)), "application/json");
         }
