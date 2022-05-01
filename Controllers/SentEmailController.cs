@@ -51,7 +51,7 @@ namespace HR.Controllers
                     smtp.EnableSsl = true;
 
                   
-                    model.Password = "ametistul";
+                    model.Password = "xuwdgmsbgnnomtux";
 
                      NetworkCredential NetworkCred = new NetworkCredential(em, model.Password);
                     smtp.UseDefaultCredentials = true;
