@@ -3,7 +3,7 @@ Project:
 CVs and interviews management
 .NET Core 3.1
 HTML.Model and HTML.Console App must be taken out of the main file for them to work.
-
+In ConsumeModel.cs we need to change the path for  HRML.Model\MLModel.zip
 
 We need to create the database from the model (entities and context) by adding a migration.
 
