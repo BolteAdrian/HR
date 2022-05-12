@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -15,7 +16,9 @@ namespace HR.Models
         }
 
         public int Id { get; set; }
+        [Required]
         public int? EmployeeId { get; set; }
+        [Required]
         public string EmployeeName { get; set; }
         public int OrganizationId { get; set; }
         public int? CorId { get; set; }

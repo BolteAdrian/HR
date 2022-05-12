@@ -15,7 +15,7 @@ using DevExtreme.AspNet.Mvc;
 using DevExtreme.AspNet.Data;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace HR.Controllers
 {
@@ -346,7 +346,7 @@ namespace HR.Controllers
                 if (smallFile.Length < maxFileSize)
                 {
 
-                    var path = Path.Combine(@"D:\Programe\\Xampp\htdocs\CV-uri\", pers.Id.ToString());
+                    var path = Path.Combine(@"C:\Users\Adi\Desktop\Licenta\HR\wwwroot\CV-uri\", pers.Id.ToString());
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
                      
@@ -407,7 +407,7 @@ namespace HR.Controllers
                 if (smallFile.Length < maxFileSize)
                 {
 
-                    var path = Path.Combine(@"D:\Programe\\Xampp\htdocs\CV-uri\", aux3.ToString());
+                    var path = Path.Combine(@"C:\Users\Adi\Desktop\Licenta\HR\wwwroot\CV-uri\", aux3.ToString());
                     
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
@@ -434,8 +434,8 @@ namespace HR.Controllers
 
         static int aux;
 
-
-        static string rootFolder = @"D:\Programe\Xampp\htdocs\CV-uri\";
+        
+        static string rootFolder = @"C:\Users\Adi\Desktop\Licenta\HR\wwwroot\CV-uri\";
 
 
         //delete document din baza de date si director
@@ -455,8 +455,8 @@ namespace HR.Controllers
 
                 // Files to be deleted    
                 string authorsFile = s.DocumentName;
-                rootFolder += s.PersonCvid+"\\";
-                
+                string idPersoana = s.PersonCvid+"\\";
+                rootFolder += idPersoana;
                 try
                 {
                     // Check if file exists with its full path    
@@ -561,9 +561,33 @@ namespace HR.Controllers
 .ToList();
             int aux2 = ((int)Tablou.LastOrDefault() + 1);
 
+
+
+
+
+
            
             using (var transaction = _context.Database.BeginTransaction())
             {
+
+                List<long> Names = _context.Documents
+   .Where(u => u.Id > 0)
+   .Select(u => u.Id)
+   .ToList();
+                int lastID = ((int)(Names.LastOrDefault() + 1));
+                if (NumeF != null)
+                {
+                    Documents d = new Documents();
+
+                    d.Id = lastID;
+                    d.DateAdded = DateTime.Today;
+                    d.DocumentName = NumeF;
+                    d.PersonCvid = aux2;
+                    _context.Documents.AddRange(d);
+
+                    await _context.SaveChangesAsync();
+                }
+                else { TempData["AlertMessage"] = "You need to add an CV before you add this person"; }
 
 
                 DateTime dt = (DateTime)m.BirthDate;
@@ -593,20 +617,7 @@ namespace HR.Controllers
                 transaction.Commit();
 
 
-                List<long> Names = _context.Documents
-      .Where(u => u.Id > 0)
-      .Select(u => u.Id)
-      .ToList();
-                int lastID = ((int)(Names.LastOrDefault() + 1));
-
-                Documents d = new Documents();
-
-                d.Id = lastID;
-                d.DateAdded = DateTime.Today;
-                d.DocumentName = NumeF;
-                d.PersonCvid = aux2;
-                _context.Documents.AddRange(d);
-                await _context.SaveChangesAsync();
+             
                 TempData["AlertMessage"] = "Person added successfully";
             }
           

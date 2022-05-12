@@ -111,12 +111,13 @@
              .OnClick(
 				@<text>
 					 function(e) {
-        s="http://127.0.0.1/CV-uri/"
+
+        s="/CV-uri/";
         s+=@Model.Id;
         s+="/";
         s+=e.row.data.DocumentName;
          window.open( s,'_blank');
-   
+
         }
 				</text>
             );
@@ -165,6 +166,7 @@
             c.Add().Caption("TestResult").DataField("TestResult");
             c.Add().Caption("OffertStatus").DataField("OffertStatus");
 
+
             c.Add().Caption("Action")
             .Type(GridCommandColumnType.Buttons)
             .Buttons(btns =>
@@ -172,13 +174,13 @@
 
 
 
-        btns.Add()
-        .Text("Edit")
-        .CssClass("btn btn-primary btn-sm rounded white-text")
-        .OnClick(
+            btns.Add()
+            .Text("Edit")
+            .CssClass("btn btn-primary btn-sm rounded white-text")
+            .OnClick(
         @<text>
             function(e) {
-            window.location = '@Url.Action("Edit", "InterviewCvs")/' + e.row.data.Id;
+            window.location = '@Url.Action("Interview", "InterviewCvs")/' + e.row.data.Id;
             }
         </text>
         );
@@ -203,7 +205,16 @@
 
 
     </div>
-
+   
+        &nbsp
+        &nbsp
+        &nbsp
+        <p>Legend:</p>
+        <p>1= Accepted</p>
+        <p>2= Refused</p>
+        &nbsp
+        &nbsp
+    
 </div>
 
 

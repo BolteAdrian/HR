@@ -33,6 +33,7 @@ namespace HR.Models
         public string CountyAddress { get; set; }
         [Required]
         public string CityAddress { get; set; }
+        [Required]
         public DateTime? BirthDate { get; set; }
         public int? Age { get; set; }
         public string AddedBy { get; set; }
