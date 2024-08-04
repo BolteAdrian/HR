@@ -1,204 +1,148 @@
-﻿
-
-@model ReflectionIT.Mvc.Paging.PagingList<HR.Models.Employee>
+﻿@model ReflectionIT.Mvc.Paging.PagingList<HR.Models.Employees>
 @using ReflectionIT.Mvc.Paging
 @addTagHelper *, ReflectionIT.Mvc.Paging
 
 @{
     ViewBag.Title = "Index";
-
 }
-@if (TempData["AlertMessage"] != null)
-{
 
-    <p class="alert alert-success" id="successMessage">@TempData["AlertMessage"]</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+</head>
+<body>
 
-}
-<h1>Employees </h1>
-<style>
-    body {
-        background-image: url("https://cutewallpaper.org/21/background-image-png/Magically-Remove-Image-Backgrounds-Clipping-Magic.png");
-        background-color: #cccccc;
-        margin: 1em;
-        margin: -3px;
-        border: 1px solid #4CAF50;
+    @if (TempData["AlertMessage"] != null)
+    {
+        <p class="alert alert-success" id="successMessage">@TempData["AlertMessage"]</p>
     }
-</style>
-<a onclick="showInPopup('@Url.Action("AddOrEdit","Employees",null,Context.Request.Scheme)','New Employees')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Employees</a>
 
-<form method="get" class="form-inline">
-    <input name="filter" class="form-control" placeholder=""
-           value="@Model.RouteValue["Filter"]" />
-    <button type="submit" class="btn btn-info">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
-    </button>
-    <br />
-    &nbsp;
-    <a asp-action="Index">     Get All Interviews</a>
-</form>
+    <h2>Employees</h2>
 
-<div class="text-right">
-    <a onclick="showInPopup('@Url.Action("Index","SentEmail",null,Context.Request.Scheme)','Email')" class="btn btn-success text-white"><i class="fas fa-random"></i> Email</a>
-    <br>
-    <form method="post" asp-controller="Employees" asp-action="ExportToExcel">
-        <input type="submit" value="Export To Excel" />
-    </form>
-</div>
-<div class="text-left">
+    <p>
+        <a onclick="showInPopup('@Url.Action("AddOrEdit", "Employees", null, Context.Request.Scheme)', 'New Employee')" class="btn btn-success text-white">
+            <i class="fas fa-plus"></i> Add Employee
+        </a>
+    </p>
 
-    <a class="btn btn-success text-white" href="javascript:void(0);" onclick="printPageArea('printableArea')">Print</a>
-</div>
+    <div class="filter-menu_container">
+        <form method="get" class="form-inline">
+            <input name="filter" class="form-control" placeholder=""
+                   value="@(Model.RouteValue != null && Model.RouteValue.ContainsKey("filter") ? Model.RouteValue["filter"] : "")" />
+            <button type="submit" class="btn btn-info">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+            </button>
+        </form>
 
-<div class="" style="width:40%;margin-top:2%">
-    <div id="printableArea">
-        <table class="table table-bordered " bgcolor="white">
-            <thead class="thead-dark">
-                <tr style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">@Html.SortableHeaderFor(model => model.EmployeeId, this.Model)</th>
-
-                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">@Html.SortableHeaderFor(model => model.EmployeeName, this.Model)</th>
-                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.SortableHeaderFor(model => model.OrganizationId, this.Model)
-                    </th>
-
-                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.SortableHeaderFor(model => model.EmploymentDate, this.Model)
-                    </th>
-                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.SortableHeaderFor(model => model.Email, this.Model)
-                    </th>
-                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.SortableHeaderFor(model => model.Team, this.Model)
-                    </th>
-                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        @Html.SortableHeaderFor(model => model.CompanyShortName, this.Model)
-                    </th>
-                    <th style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        Actions
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr id="row_@item.Id" style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                            @Html.DisplayFor(modelItem => item.EmployeeId)
-                        </td>
-                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                            @Html.DisplayFor(modelItem => item.EmployeeName)
-                        </td>
-                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                            @Html.DisplayFor(modelItem => item.OrganizationId)
-                        </td>
-
-                        @{
-
-
-                            var dateTimeNow = (DateTime)item.EmploymentDate;
-                            var dateOnlyString = dateTimeNow.ToShortDateString();
-                        }
-
-                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle; ">
-                            @Html.DisplayFor(modelItem => dateOnlyString)
-                        </td>
-
-
-
-                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                            @Html.DisplayFor(modelItem => item.Email)
-                        </td>
-                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                            @Html.DisplayFor(modelItem => item.Team)
-                        </td>
-                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                            @Html.DisplayFor(modelItem => item.CompanyShortName)
-                        </td>
-
-                        <td style=" border: 2px solid #999; text-align: center; vertical-align: middle;">
-                            <a onclick="showInPopup('@Url.Action("AddOrEdit","Employees",new {id=item.Id},Context.Request.Scheme)','Update Employees')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
-                            <b class="btn btn-danger"><a onclick="ConfirmDelete(@item.Id)"> Delete</a></b>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div class="menu-container">
+            <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
+            <div class="dropdown-content" id="dropdownMenu">
+                <a onclick="showInPopup('@Url.Action("Index", "Emails", null, Context.Request.Scheme)', 'Email')">Email</a>
+                <form method="post" asp-controller="Employees" asp-action="ExportToExcel">
+                    <input class="export_button" type="submit" value="Export To Excel" />
+                </form>
+                <a href="javascript:void(0);" onclick="printPageArea('printableArea')">Print</a>
+            </div>
+        </div>
     </div>
 
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-
-                <div class="modal-header">
-                    <a href="#" class="close" data-dismiss="modal">&times;</a>
-                    <h3 class="modal-title">Delete </h3>
-                </div>
-                <div class="modal-body">
-                    <h4>Are you sure ? You want to delete this. </h4>
-
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                    <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
-                </div>
-
-            </div>
-
+    <div class="table-container">
+        <div id="printableArea">
+            <table class="table table-bordered" bgcolor="white">
+                <thead>
+                    <tr>
+                        <th>@Html.SortableHeaderFor(model => model.EmployeeId, this.Model)</th>
+                        <th>@Html.SortableHeaderFor(model => model.Name, this.Model)</th>
+                        <th>@Html.SortableHeaderFor(model => model.OrganizationId, this.Model)</th>
+                        <th>@Html.SortableHeaderFor(model => model.EmploymentDate, this.Model)</th>
+                        <th>@Html.SortableHeaderFor(model => model.Email, this.Model)</th>
+                        <th>@Html.SortableHeaderFor(model => model.Team, this.Model)</th>
+                        <th>@Html.SortableHeaderFor(model => model.CompanyShortName, this.Model)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.Id">
+                            <td>@Html.DisplayFor(modelItem => item.EmployeeId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.OrganizationId)</td>
+                            @{
+                                var dateTimeNow = (DateTime)item.EmploymentDate;
+                                var dateOnlyString = dateTimeNow.ToShortDateString();
+                            }
+                            <td>@dateOnlyString</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Team)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CompanyShortName)</td>
+                            <td class="action_container">
+                                <a onclick="showInPopup('@Url.Action("AddOrEdit", "Employees", new { id = item.Id }, Context.Request.Scheme)', 'Update Employee')" class="btn btn-info text-white">
+                                    <i class="fas fa-pencil-alt"></i> <!-- Edit icon -->
+                                </a>
+                                <button class="btn btn-danger" onclick="ConfirmDelete(@item.Id)">
+                                    <i class="fas fa-trash-alt"></i> <!-- Delete icon -->
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
 
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Employee</h5>
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this employee?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                        <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="hiddenId" />
+
     </div>
 
-    <input type="hidden" id="hiddenId" />
+    <nav aria-label="Pagination">
+        <vc:pager paging-list="@Model" />
+    </nav>
 
-</div>
+    <input type="button" value="Back" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Interviews")'" />
 
-
-
-<nav aria-label="Suppliers navigation example">
-    <vc:pager paging-list="@Model" />
-</nav>
-
-<input type="button" value="Back" onclick="location.href='@Url.Action("Index", "InterviewCvs")'" />
-
-
-<script>
-
-
-    var ConfirmDelete = function (Id) {
-
-        $("#hiddenId").val(Id);
-        $("#myModal").modal('show');
-
-    }
-
-    var DeleteEmployee = function () {
-
-        $("#loaderDiv").show();
-
-        var EmployeeId = $("#hiddenId").val();
-
-        $.ajax({
-
-
-            /*            url: "/InterviewCvs/DeleteEmployee",*/
-            url: '@Url.Action("DeleteEmployee","Employees")/',
-            data: { EmployeeId: EmployeeId },
-            success: function (result) {
-                $("#loaderDiv").hide();
-                $("#myModal").modal("hide");
-                $("#row_" + EmployeeId).remove();
-
-            },
-            error: function (result) {
-                console.log(result
-                )
-            }
-
-        })
-
+    <script>
+        var ConfirmDelete = function (Id) {
+            $("#hiddenId").val(Id);
+            $("#myModal").modal('show');
         }
 
+        var DeleteEmployee = function () {
+            $("#loaderDiv").show();
+            var EmployeeId = $("#hiddenId").val();
+            $.ajax({
+                url: '@Url.Action("DeleteEmployee", "Employees")/',
+                data: { EmployeeId: EmployeeId },
+                success: function (result) {
+                    $("#loaderDiv").hide();
+                    $("#myModal").modal("hide");
+                    $("#row_" + EmployeeId).remove();
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+        }
 
         function printPageArea(areaID) {
             var printContent = document.getElementById(areaID);
@@ -209,4 +153,25 @@
             WinPrint.print();
             WinPrint.close();
         }
-</script>
+
+        function toggleMenu() {
+            var menu = document.getElementById('dropdownMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.menu-icon')) {
+                var dropdowns = document.getElementsByClassName('dropdown-content');
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.style.display === 'block') {
+                        openDropdown.style.display = 'none';
+                    }
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

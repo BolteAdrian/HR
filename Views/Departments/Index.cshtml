@@ -5,16 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-
 <div id="view-all">
     @await Html.PartialAsync("_ViewAll", Model)
 </div>
-
-@*@section Scripts{
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    }*@
-
 
 <div class="modal" tabindex="-1" role="dialog" id="form-modal">
     <div class="modal-dialog" role="document">
@@ -25,9 +18,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">
-
-            </div>
+            <div class="modal-body"></div>
         </div>
     </div>
 </div>

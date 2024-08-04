@@ -1,132 +1,92 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-
+﻿using System.Threading.Tasks;
+using HR.DataModels;
 using HR.Models;
-using ReflectionIT.Mvc.Paging;
+using HR.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using ClosedXML.Excel;
-using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace HR_CV.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly modelContext _context;
+        private readonly EmployeesService _employeeService;
 
-        public EmployeesController(modelContext context)
+        public EmployeesController(EmployeesService employeeService)
         {
-            _context = context;
+            _employeeService = employeeService;
         }
 
-
-        // index cu search,paginare si order by name si id
+        // GET: Employees
+        /// <summary>
+        /// Retrieves and displays a paginated list of employees with optional filtering and sorting.
+        /// </summary>
+        /// <param name="filter">Optional filter to apply to the employee list.</param>
+        /// <param name="page">The page number to display (default is 1).</param>
+        /// <param name="sortExpression">The sorting criteria (default is "EmployeeId").</param>
+        /// <returns>Returns a view that displays the list of employees.</returns>
         [Authorize]
-        public async Task<IActionResult> Index(string filter, int page = 1,
-                                              string sortExpression = "EmployeeId")
+        public async Task<IActionResult> Index(string filter, int page = 1, string sortExpression = "EmployeeId")
         {
-           
-
-
-
-            var qry = _context.Employee.AsNoTracking().OrderBy(p => p.Id)
-                .AsQueryable();
-
-
-            if (!string.IsNullOrWhiteSpace(filter))
-            {
-                qry = qry.Where(p => p.EmployeeName.Contains(filter) || p.Team.Contains(filter) || p.CompanyShortName.Contains(filter));
-            }
-
-            var model = await PagingList.CreateAsync(
-                                         qry, 10, page, sortExpression, "EmployeeName");
-
-            model.RouteValue = new RouteValueDictionary {
-        { "filter", filter}
-    };
-
-            return View(model);
+            var employeesViewModel = await _employeeService.GetEmployeesAsync(filter, page, sortExpression);
+            employeesViewModel.RouteValue = new RouteValueDictionary { { "filter", filter } };
+            return View(employeesViewModel);
         }
 
-
-
-
-
-        
-        // GET: Transaction/AddOrEdit(Insert)
-        // GET: Transaction/AddOrEdit/5(Update)
+        // GET: Employees/AddOrEdit/0 (Insert) or Employees/AddOrEdit/:id (Update)
+        /// <summary>
+        /// Displays a form to add a new employee or edit an existing one based on the provided ID.
+        /// </summary>
+        /// <param name="id">The ID of the employee to edit (0 for new employee).</param>
+        /// <returns>Returns a view for adding or editing an employee.</returns>
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
             if (id == 0)
-                return View(new Employee());
+            {
+                return View(new Employees());
+            }
             else
             {
-                var transactionModel = await _context.Employee.FindAsync(id);
-                if (transactionModel == null)
+                var employee = await _employeeService.GetEmployeeByIdAsync(id);
+                if (employee == null)
                 {
                     return NotFound();
                 }
-                return View(transactionModel);
+                return View(employee);
             }
         }
 
+        // POST: Employees/AddOrEdit
+        /// <summary>
+        /// Handles the creation or update of an employee based on the provided ID.
+        /// </summary>
+        /// <param name="id">The ID of the employee to update (0 for new employee).</param>
+        /// <param name="employee">The employee data to be created or updated.</param>
+        /// <returns>Returns a JSON result indicating whether the operation was successful and includes the updated view.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddOrEdit(int id, [Bind("Id,EmployeeId,EmployeeName,OrganizationId,EmploymentDate,Email,Team,CompanyShortName")] Employee employee)
+        public async Task<IActionResult> AddOrEdit(int id, [Bind("Id,EmployeeId,Name,OrganizationId,EmploymentDate,Email,Team,CompanyShortName")] Employees employee)
         {
             if (ModelState.IsValid)
             {
-                //Insert
                 if (id == 0)
                 {
-                    List<int> Tablou = _context.Employee
-.Select(u => u.Id)
-.ToList();
-                    int aux2 = ((int)Tablou.LastOrDefault() + 1);
-                    
-
-                        Employee e = new Employee();
-                        e.Id = aux2;
-                        e.EmployeeId = employee.EmployeeId;
-                        e.EmployeeName = employee.EmployeeName;
-                        e.EmploymentDate = employee.EmploymentDate;
-                        e.OrganizationId = employee.OrganizationId;
-                        e.EmploymentDate = employee.EmploymentDate;
-                        e.Email = employee.Email;
-                        e.Team = employee.Team;
-                        e.CompanyShortName = employee.CompanyShortName;
-                        e.IsActive = 1;
-                        e.Plant = 1;
-
-
-                        _context.Employee.AddRange(e);
-                       
-                        await _context.SaveChangesAsync();
-                    TempData["AlertMessage"] = "Inserted with success";
-
-
-
+                    await _employeeService.AddEmployeeAsync(employee);
+                    TempData["AlertMessage"] = "Inserted successfully";
                 }
-                //Update
                 else
                 {
-
                     try
                     {
-                        _context.Update(employee);
-                        await _context.SaveChangesAsync();
-                        TempData["AlertMessage"] = "Updated with success";
+                        await _employeeService.UpdateEmployeeAsync(employee);
+                        TempData["AlertMessage"] = "Updated successfully";
                     }
                     catch (DbUpdateConcurrencyException)
                     {
-                        if (!EmployeeExists(employee.Id))
+                        if (!_employeeService.EmployeeExists(employee.Id))
                         {
                             return NotFound();
                         }
@@ -135,85 +95,38 @@ namespace HR_CV.Controllers
                             throw;
                         }
                     }
-
-
                 }
-                return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Employee.ToList()) });
+                return Json(new
+                {
+                    isValid = true,
+                    html = Helper.RenderRazorViewToString(this, "_ViewAll", await _employeeService.GetEmployeesAsync(null, 1, "Name"))
+                });
             }
-            return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", employee) });
-        }
-
-
-
-        //export button
-        
-        [Authorize(Roles = "Admin")]
-        public IActionResult ExportToExcel()
-        {
-
-            using (var workbook = new XLWorkbook())
+            return Json(new
             {
-                var worksheet = workbook.Worksheets.Add("Employees");
-                var currentRow = 1;
-                worksheet.Cell(currentRow, 1).Value = "Id";
-                worksheet.Cell(currentRow, 2).Value = "EmployeeId";
-                worksheet.Cell(currentRow, 3).Value = "EmployeeName";
-                worksheet.Cell(currentRow, 4).Value = "OrganizationId";
-                worksheet.Cell(currentRow, 5).Value = "EmploymentDate";
-                worksheet.Cell(currentRow, 6).Value = "Email";
-                worksheet.Cell(currentRow, 7).Value = "Team";
-                worksheet.Cell(currentRow, 8).Value = "CompanyShortName";
-                
-
-                foreach (var x in _context.Employee)
-                {
-                    currentRow++;
-                    worksheet.Cell(currentRow, 1).Value = x.Id;
-                    worksheet.Cell(currentRow, 2).Value = x.EmployeeId;
-                    worksheet.Cell(currentRow, 3).Value = x.EmployeeName;
-                    worksheet.Cell(currentRow, 4).Value = x.OrganizationId;
-                    var dateTimeNow = (DateTime)x.EmploymentDate;
-                    var dateOnlyString = dateTimeNow.ToShortDateString();
-                    worksheet.Cell(currentRow, 5).Value = Convert.ToString(dateOnlyString);
-
-
-                    worksheet.Cell(currentRow, 6).Value = x.Email;
-                    worksheet.Cell(currentRow, 7).Value = x.Team;
-                    worksheet.Cell(currentRow, 8).Value = x.CompanyShortName;
-
-
-
-                }
-                using (var stream = new MemoryStream())
-                {
-                    workbook.SaveAs(stream);
-                    var content = stream.ToArray();
-                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Employees.xlsx");
-                }
-
-            }
+                isValid = false,
+                html = Helper.RenderRazorViewToString(this, "AddOrEdit", employee)
+            });
         }
 
+        // GET: Employees/ExportToExcel
+        /// <summary>
+        /// Exports the list of employees to an Excel file.
+        /// </summary>
+        /// <returns>Returns a file result containing the Excel file.</returns>
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var excelContent = await _employeeService.ExportEmployeesToExcelAsync();
+            return File(excelContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Employees.xlsx");
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // GET: Employees/Details/5
-
+        // GET: Employees/Details/:id
+        /// <summary>
+        /// Displays the details of a specific employee.
+        /// </summary>
+        /// <param name="id">The ID of the employee to be viewed.</param>
+        /// <returns>Returns a view displaying the details of the employee.</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -221,8 +134,7 @@ namespace HR_CV.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var employee = await _employeeService.GetEmployeeByIdAsync(id);
             if (employee == null)
             {
                 return NotFound();
@@ -232,6 +144,10 @@ namespace HR_CV.Controllers
         }
 
         // GET: Employees/Create
+        /// <summary>
+        /// Displays a form to create a new employee.
+        /// </summary>
+        /// <returns>Returns a view that allows creating a new employee.</returns>
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
@@ -239,27 +155,31 @@ namespace HR_CV.Controllers
         }
 
         // POST: Employees/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Handles the creation of a new employee.
+        /// </summary>
+        /// <param name="employee">The employee data to be created.</param>
+        /// <returns>Redirects to the index view if successful, otherwise redisplays the form.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,EmployeeId,EmployeeName,OrganizationId,CorId,EmploymentDate,EndDate,IsActive,Email,UserName,Plant,Team,CompanyShortName")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Id,EmployeeId,Name,OrganizationId,EmploymentDate,Email,Team,CompanyShortName")] Employees employee)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
+                await _employeeService.AddEmployeeAsync(employee);
+                TempData["AlertMessage"] = "Inserted successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(employee);
         }
 
-
-
-
-
-        // GET: Employees/Edit/5
+        // GET: Employees/Edit/:id
+        /// <summary>
+        /// Displays a form to edit a specific employee.
+        /// </summary>
+        /// <param name="id">The ID of the employee to be edited.</param>
+        /// <returns>Returns a view for editing the employee.</returns>
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -268,7 +188,7 @@ namespace HR_CV.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee.FindAsync(id);
+            var employee = await _employeeService.GetEmployeeByIdAsync(id);
             if (employee == null)
             {
                 return NotFound();
@@ -276,13 +196,17 @@ namespace HR_CV.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Employees/Edit/:id
+        /// <summary>
+        /// Handles the update of a specific employee.
+        /// </summary>
+        /// <param name="id">The ID of the employee to be updated.</param>
+        /// <param name="employee">The employee data to be updated.</param>
+        /// <returns>Redirects to the index view if successful, otherwise redisplays the form.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeId,EmployeeName,OrganizationId,CorId,EmploymentDate,EndDate,IsActive,Email,UserName,Plant,Team,CompanyShortName")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeId,Name,OrganizationId,EmploymentDate,Email,Team,CompanyShortName")] Employees employee)
         {
             if (id != employee.Id)
             {
@@ -293,12 +217,12 @@ namespace HR_CV.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
+                    await _employeeService.UpdateEmployeeAsync(employee);
+                    TempData["AlertMessage"] = "Updated successfully";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.Id))
+                    if (!_employeeService.EmployeeExists(employee.Id))
                     {
                         return NotFound();
                     }
@@ -312,35 +236,18 @@ namespace HR_CV.Controllers
             return View(employee);
         }
 
-
-
-
+        // POST: Employees/DeleteEmployee
+        /// <summary>
+        /// Deletes a specific employee by ID and returns a JSON result indicating success.
+        /// </summary>
+        /// <param name="employeeId">The ID of the employee to be deleted.</param>
+        /// <returns>Returns a JSON result indicating whether the deletion was successful.</returns>
         [Authorize(Roles = "Admin")]
-        public JsonResult DeleteEmployee(int EmployeeId)
+        public async Task<IActionResult> DeleteEmployee(int employeeId)
         {
-            bool result = false;
-
-            //var employee = _context.Employee.FindAsync(id);
-            Employee employee = _context.Employee.Where(x => x.Id == EmployeeId).SingleOrDefault();
-            try
-            {
-
-                _context.Employee.Remove(employee);
-                _context.SaveChanges();
-                TempData["AlertMessage"] = "Deleted with success";
-            }
-            catch { }
-
-            return Json(result);
-        }
-
-
-
-
-
-        private bool EmployeeExists(int id)
-        {
-            return _context.Employee.Any(e => e.Id == id);
+            await _employeeService.DeleteEmployeeAsync(employeeId);
+            TempData["AlertMessage"] = "Deleted successfully";
+            return Json(new { success = true });
         }
     }
 }

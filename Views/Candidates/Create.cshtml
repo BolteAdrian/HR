@@ -1,0 +1,136 @@
+﻿@model HR.Models.Candidates
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create</h2>
+
+<h4>Candidate</h4>
+<hr />
+<div class="row">
+    <div class="col">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="BirthDate" class="control-label"></label>
+                        <input asp-for="BirthDate" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                        <span asp-validation-for="BirthDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="DateApply" class="control-label"></label>
+                        <input asp-for="DateApply" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                        <span asp-validation-for="DateApply" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="FunctionApply" class="control-label"></label>
+                        <select asp-for="FunctionApply" class="form-control" asp-items="ViewBag.FunctionApply"></select>
+                        <span asp-validation-for="FunctionApply" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="FunctionMatch" class="control-label"></label>
+                        <select asp-for="FunctionMatch" class="form-control" asp-items="ViewBag.FunctionMatch"></select>
+                        <span asp-validation-for="FunctionMatch" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Observation" class="control-label"></label>
+                        <input asp-for="Observation" class="form-control" />
+                        <span asp-validation-for="Observation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Upload Files</label>
+                        <div class="custom-file">
+                            <input type="file" name="files" accept=".pdf" multiple class="custom-file-input" id="fileInput" />
+                            <label class="custom-file-label" for="fileInput">
+                                <i class="fas fa-upload"></i> Choose files
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <label asp-for="ModeApply" class="control-label"></label>
+                        <select asp-for="ModeApply" class="form-control" asp-items="ViewBag.ModeApply"></select>
+                        <span asp-validation-for="ModeApply" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="County" class="control-label"></label>
+                        <input asp-for="County" class="form-control" />
+                        <span asp-validation-for="County" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label"></label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Studies" class="control-label"></label>
+                        <input asp-for="Studies" class="form-control" />
+                        <span asp-validation-for="Studies" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Experience" class="control-label"></label>
+                        <input asp-for="Experience" class="form-control" />
+                        <span asp-validation-for="Experience" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <select asp-for="Status" class="form-control" asp-items="ViewBag.Status"></select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                    <div class="modal_submit_button">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="form-group">
+    <input type="button" value="Back" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Candidates")'" />
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var fileInput = document.getElementById('fileInput');
+            var fileLabel = document.querySelector('.custom-file-label');
+
+            fileInput.addEventListener('change', function (event) {
+                var files = event.target.files;
+                var fileCount = files.length;
+                if (fileCount > 0) {
+                    fileLabel.textContent = fileCount + (fileCount > 1 ? ' files selected' : ' file selected');
+                } else {
+                    fileLabel.textContent = 'Choose files';
+                }
+            });
+        });
+    </script>
+}

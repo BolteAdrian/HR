@@ -1,0 +1,121 @@
+﻿@model JobApplicationAggregate
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Title -->
+<h4>Edit Interview</h4>
+<hr />
+
+<!-- Form Container -->
+<div class="row">
+    <div class="col">
+        <form asp-action="Edit">
+            <div class="row">
+
+                <!-- Left Column -->
+                <div class="col-xl-6">
+                    <!-- Hidden Field -->
+                    <input type="hidden" asp-for="Id" />
+
+                    <!-- Candidate ID -->
+                    <div class="form-group">
+                        <label asp-for="CandidateId" class="control-label"></label>
+                        <select asp-for="CandidateId" class="form-control" asp-items="ViewBag.CandidateId"></select>
+                        <span asp-validation-for="CandidateId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Interview Date -->
+                    <div class="form-group">
+                        <label asp-for="InterviewDate" class="control-label"></label>
+                        <input asp-for="InterviewDate" class="form-control" />
+                        <span asp-validation-for="InterviewDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- Function -->
+                    <div class="form-group">
+                        <label asp-for="FunctionApply" class="control-label"></label>
+                        <select asp-for="FunctionApply" class="form-control" asp-items="ViewBag.FunctionApply"></select>
+                        <span asp-validation-for="FunctionApply" class="text-danger"></span>
+                    </div>
+
+                    <!-- Employee ID -->
+                    <div class="form-group">
+                        <label asp-for="EmployeeId" class="control-label"></label>
+                        <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
+                        <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Offer Status -->
+                    <div class="form-group">
+                        <label asp-for="OfferStatus" class="control-label"></label>
+                        <select asp-for="OfferStatus" class="form-control">
+                            <option value="1">Signed</option>
+                            <option value="2">Refused</option>
+                        </select>
+                        <span asp-validation-for="OfferStatus" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-xl-6">
+
+                    <!-- Date Answer -->
+                    <div class="form-group">
+                        <label asp-for="DateAnswer" class="control-label"></label>
+                        <input asp-for="DateAnswer" class="form-control" />
+                        <span asp-validation-for="DateAnswer" class="text-danger"></span>
+                    </div>
+
+                    <!-- Test Result -->
+                    <div class="form-group">
+                        <label asp-for="TestResult" class="control-label"></label>
+                        <input asp-for="TestResult" class="form-control" />
+                        <span asp-validation-for="TestResult" class="text-danger"></span>
+                    </div>
+
+                    <!-- Accepted -->
+                    <div class="form-group">
+                        <label asp-for="Accepted" class="control-label"></label>
+                        <select asp-for="Accepted" class="form-control">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                        <span asp-validation-for="Accepted" class="text-danger"></span>
+                    </div>
+
+                    <!-- Employment Date -->
+                    <div class="form-group">
+                        <label asp-for="EmploymentDate" class="control-label"></label>
+                        <input asp-for="EmploymentDate" class="form-control" />
+                        <span asp-validation-for="EmploymentDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="form-group">
+                        <label asp-for="Comments" class="control-label"></label>
+                        <textarea asp-for="Comments" class="form-control"></textarea>
+                        <span asp-validation-for="Comments" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <!-- Buttons -->
+                <div class="interview_buttons_container">
+                    <input type="button" value="Back" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Interviews")'" />
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

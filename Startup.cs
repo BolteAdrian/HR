@@ -1,19 +1,14 @@
-using HR.Data;
-using HR.Models;
+using HR.DataModels;
+using HR.Repository;
+using HR.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReflectionIT.Mvc.Paging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HR
 {
@@ -29,37 +24,39 @@ namespace HR
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configure and register the EmailSettings class with the DI container
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            services.AddTransient<EmailService>();
 
-            services.AddDbContext<Models.modelContext>(Options => Options.UseSqlServer("Server=ADRIAN; Database=model; Trusted_Connection=True;"));
+            // Register the DbContext with the connection string
+            services.AddDbContext<modelContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-
-
-            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<modelContext>();
-
-
+            // Register Identity services
             services.AddIdentity<IdentityUser, IdentityRole>()
-               .AddDefaultTokenProviders()
-               .AddDefaultUI()
-               .AddEntityFrameworkStores<modelContext>();
+                .AddDefaultTokenProviders()
+                .AddDefaultUI()
+                .AddEntityFrameworkStores<modelContext>();
 
-
-
+            // Add controllers with views and set JSON options
             services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddRazorPages();
 
+            // Register MVC services
             services.AddMvc();
 
+            // Register services
+            services.AddScoped<DepartmentsService>();
+            services.AddScoped<DocumentsService>();
+            services.AddScoped<EmployeesService>();
+            services.AddScoped<FunctionsService>();
+
+            // Register the Paging library with Bootstrap 4 options
             services.AddPaging(options => {
                 options.ViewName = "Bootstrap4";
                 options.HtmlIndicatorDown = " <span>&darr;</span>";
                 options.HtmlIndicatorUp = " <span>&uarr;</span>";
             });
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,9 +70,9 @@ namespace HR
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

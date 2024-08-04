@@ -1,0 +1,49 @@
+﻿@model IEmail
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Email Form</title>
+</head>
+<body>
+    <div class="container mt-5">
+        @using (Html.BeginForm("Index", "Emails", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group">
+                <label for="to">To:</label>
+                @Html.TextBoxFor(model => model.To, new { @class = "form-control", id = "to" })
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Subject:</label>
+                @Html.TextBoxFor(model => model.Subject, new { @class = "form-control", id = "subject" })
+            </div>
+
+            <div class="form-group">
+                <label for="body">Body:</label>
+                @Html.TextAreaFor(model => model.Body, new { @class = "form-control", rows = "3", id = "body" })
+            </div>
+
+            <div class="form-group">
+                @Html.TextBox("Attachment", null, new { type = "file" })
+            </div>
+
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+
+            @if (ViewBag.Message != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    @ViewBag.Message
+                </div>
+            }
+        }
+    </div>
+</body>
+</html>

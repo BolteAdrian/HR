@@ -1,120 +1,110 @@
-﻿
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using HR.DataModels;
 using HR.Models;
+using HR.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using ReflectionIT.Mvc.Paging;
 
 namespace HR.Controllers
 {
+    /// <summary>
+    /// Handles CRUD operations and other functionalities related to departments.
+    /// </summary>
     public class DepartmentsController : Controller
     {
-        private readonly modelContext _context;
+        private readonly DepartmentsService _departmentService;
 
-        public DepartmentsController(modelContext context)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DepartmentsController"/> class.
+        /// </summary>
+        /// <param name="departmentService">The service used for department-related operations.</param>
+        public DepartmentsController(DepartmentsService departmentService)
         {
-            _context = context;
+            _departmentService = departmentService;
         }
 
-
-
-
-
+        /// <summary>
+        /// Displays a list of departments with optional filtering, pagination, and sorting.
+        /// </summary>
+        /// <param name="filter">A filter string to apply to the list of departments.</param>
+        /// <param name="page">The page number to display.</param>
+        /// <param name="sortExpression">The sort expression for the list.</param>
+        /// <returns>A view displaying the list of departments.</returns>
         [Authorize]
-        public async Task<IActionResult> Index(string filter, int page = 1,
-                                             string sortExpression = "Id")
+        public async Task<IActionResult> Index(string filter, int page = 1, string sortExpression = "Id")
         {
-          
+            var model = await _departmentService.GetDepartmentsAsync(filter, page, sortExpression);
 
-
-
-            var qry = _context.Departments.AsNoTracking().OrderBy(p => p.Id)
-                .AsQueryable();
-
-
-            if (!string.IsNullOrWhiteSpace(filter))
+            if (model == null)
             {
-                qry = qry.Where(p => p.NameDepartment.Contains(filter) );
+                return NotFound();
             }
 
-            var model = await PagingList.CreateAsync(
-                                         qry, 10, page, sortExpression, "NameDepartment");
-
-            model.RouteValue = new RouteValueDictionary {
-        { "filter", filter}
-    };
+            model.RouteValue = model.RouteValue ?? new RouteValueDictionary();
+            model.RouteValue["filter"] = filter;
 
             return View(model);
         }
 
-
-
-
-        // GET: Transaction/AddOrEdit(Insert)
-        // GET: Transaction/AddOrEdit/5(Update)
+        /// <summary>
+        /// Displays the form for creating or editing a department.
+        /// </summary>
+        /// <param name="id">The ID of the department to edit (if applicable).</param>
+        /// <returns>A view with the department form.</returns>
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
             if (id == 0)
+            {
+                // New department, return empty form
                 return View(new Departments());
+            }
             else
             {
-                var transactionModel = await _context.Departments.Where(x=>x.Id==id).SingleOrDefaultAsync();
-                if (transactionModel == null)
+                var department = await _departmentService.GetDepartmentByIdAsync(id);
+                if (department == null)
                 {
+                    // Department not found, return NotFound
                     return NotFound();
                 }
-                return View(transactionModel);
+                // Existing department, return form pre-filled with department data
+                return View(department);
             }
         }
 
+        /// <summary>
+        /// Handles the creation or update of a department.
+        /// </summary>
+        /// <param name="id">The ID of the department to update (if applicable).</param>
+        /// <param name="department">The department details to be saved.</param>
+        /// <returns>A JSON result indicating success or failure of the operation, along with the rendered view.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddOrEdit(int id, [Bind("Id,NameDepartment")] Departments departments)
+        public async Task<IActionResult> AddOrEdit(int id, [Bind("Id,Name")] Departments department)
         {
             if (ModelState.IsValid)
             {
-                //Insert
                 if (id == 0)
                 {
-                    List<long> Tablou = _context.Departments
-.Select(u => u.Id)
-.ToList();
-                    int aux2 = ((int)Tablou.LastOrDefault() + 1);
-
-
-                    Departments e = new Departments();
-                    e.Id = aux2;
-                    e.NameDepartment = departments.NameDepartment;
-                  
-
-
-                    _context.Departments.AddRange(e);
-
-                    await _context.SaveChangesAsync();
-
-
+                    // Add new department
+                    await _departmentService.AddDepartmentAsync(department);
                     TempData["AlertMessage"] = "Inserted with success";
-
                 }
-                //Update
                 else
                 {
-
                     try
                     {
-                        _context.Update(departments);
-                        await _context.SaveChangesAsync();
+                        // Update existing department
+                        await _departmentService.UpdateDepartmentAsync(department);
                         TempData["AlertMessage"] = "Updated with success";
                     }
                     catch (DbUpdateConcurrencyException)
                     {
-                        if (!DepartmentsExists(departments.Id))
+                        // Handle concurrency issues
+                        if (!_departmentService.DepartmentExists(department.Id))
                         {
                             return NotFound();
                         }
@@ -123,49 +113,26 @@ namespace HR.Controllers
                             throw;
                         }
                     }
-
-
                 }
-                return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Departments.ToList()) });
+                // Return JSON result with updated view
+                var updatedDepartments = await _departmentService.GetDepartmentsAsync("", 1, "Id");
+                return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", updatedDepartments) });
             }
-            return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", departments) });
+            // Return JSON result with form errors
+            return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", department) });
         }
 
-
-
-
-
+        /// <summary>
+        /// Deletes a department by its ID.
+        /// </summary>
+        /// <param name="departmentId">The ID of the department to be deleted.</param>
+        /// <returns>A JSON result indicating success or failure of the operation.</returns>
         [Authorize(Roles = "Admin")]
-        public JsonResult DeleteEmployee(int EmployeeId)
+        public async Task<JsonResult> DeleteDepartment(int departmentId)
         {
-            bool result = false;
-
-            //var employee = _context.Employee.FindAsync(id);
-            Departments d = _context.Departments.Where(x => x.Id == EmployeeId).SingleOrDefault();
-            try
-            {
-                List<Functions> fu = _context.Functions.Where(y => y.IdDepartment == d.Id).ToList();
-                foreach(var f in fu)
-                {
-                    _context.Functions.Remove(f);
-                    _context.SaveChanges();
-                }
-                _context.Departments.Remove(d);
-                _context.SaveChanges();
-                TempData["AlertMessage"] = "Deleted with success";
-            }
-            catch { }
-
-            return Json(result);
-        }
-
-
-
-
-
-        private bool DepartmentsExists(long id)
-        {
-            return _context.Departments.Any(e => e.Id == id);
+            await _departmentService.DeleteDepartmentAsync(departmentId);
+            TempData["AlertMessage"] = "Deleted with success";
+            return Json(true);
         }
     }
 }

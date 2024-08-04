@@ -1,30 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Threading.Tasks;
 using HR.Models;
+using HR.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HR.Controllers
 {
     public class DocumentsController : Controller
     {
-        private readonly modelContext _context;
+        private readonly DocumentsService _documentService;
 
-        public DocumentsController(modelContext context)
+        public DocumentsController(DocumentsService documentService)
         {
-            _context = context;
+            _documentService = documentService;
         }
 
         // GET: Documents
+        /// <summary>
+        /// Retrieves and displays all documents.
+        /// </summary>
+        /// <returns>Returns the view displaying the list of all documents.</returns>
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Documents.ToListAsync());
+            return View(await _documentService.GetAllDocumentsAsync());
         }
 
-        // GET: Documents/Details/5
+        // GET: Documents/Details/:id
+        /// <summary>
+        /// Displays the details of a document with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the document to be viewed.</param>
+        /// <returns>Returns the view displaying the details of the document, or NotFound if the document does not exist.</returns>
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -32,39 +38,49 @@ namespace HR.Controllers
                 return NotFound();
             }
 
-            var documents = await _context.Documents
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (documents == null)
+            var document = await _documentService.GetDocumentByIdAsync(id);
+            if (document == null)
             {
                 return NotFound();
             }
 
-            return View(documents);
+            return View(document);
         }
 
         // GET: Documents/Create
+        /// <summary>
+        /// Displays a form to create a new document.
+        /// </summary>
+        /// <returns>Returns the view for creating a new document.</returns>
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Documents/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Handles the creation of a new document.
+        /// </summary>
+        /// <param name="document">The document model containing the new document data.</param>
+        /// <returns>Redirects to the index action after creating the document, or redisplays the form if an error occurs.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DocumentName,DateAdded,PersonCv,Observation")] Documents documents)
+        public async Task<IActionResult> Create([Bind("Id,Name,DateAdded,Candidate,Observation")] Documents document)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(documents);
-                await _context.SaveChangesAsync();
+                await _documentService.AddDocumentAsync(document);
                 return RedirectToAction(nameof(Index));
             }
-            return View(documents);
+            return View(document);
         }
 
-        // GET: Documents/Edit/5
+        // GET: Documents/Edit/:id
+        /// <summary>
+        /// Displays a form to edit an existing document with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the document to be edited.</param>
+        /// <returns>Returns the view for editing the document, or NotFound if the document does not exist.</returns>
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -72,22 +88,26 @@ namespace HR.Controllers
                 return NotFound();
             }
 
-            var documents = await _context.Documents.FindAsync(id);
-            if (documents == null)
+            var document = await _documentService.GetDocumentByIdAsync(id);
+            if (document == null)
             {
                 return NotFound();
             }
-            return View(documents);
+            return View(document);
         }
 
-        // POST: Documents/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Documents/Edit/:id
+        /// <summary>
+        /// Handles the update of an existing document with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the document to be updated.</param>
+        /// <param name="document">The document model containing the updated document data.</param>
+        /// <returns>Redirects to the index action after updating the document, or redisplays the form if an error occurs.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,DocumentName,DateAdded,PersonCv,Observation")] Documents documents)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,DateAdded,Candidate,Observation")] Documents document)
         {
-            if (id != documents.Id)
+            if (id != document.Id)
             {
                 return NotFound();
             }
@@ -96,12 +116,11 @@ namespace HR.Controllers
             {
                 try
                 {
-                    _context.Update(documents);
-                    await _context.SaveChangesAsync();
+                    await _documentService.UpdateDocumentAsync(document);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DocumentsExists(documents.Id))
+                    if (!_documentService.DocumentExists(document.Id))
                     {
                         return NotFound();
                     }
@@ -112,10 +131,15 @@ namespace HR.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(documents);
+            return View(document);
         }
 
-        // GET: Documents/Delete/5
+        // GET: Documents/Delete/:id
+        /// <summary>
+        /// Displays a confirmation form to delete a document with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the document to be deleted.</param>
+        /// <returns>Returns the view for confirming the deletion of the document, or NotFound if the document does not exist.</returns>
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -123,30 +147,27 @@ namespace HR.Controllers
                 return NotFound();
             }
 
-            var documents = await _context.Documents
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (documents == null)
+            var document = await _documentService.GetDocumentByIdAsync(id);
+            if (document == null)
             {
                 return NotFound();
             }
 
-            return View(documents);
+            return View(document);
         }
 
-        // POST: Documents/Delete/5
+        // POST: Documents/Delete/:id
+        /// <summary>
+        /// Handles the deletion of a document with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the document to be deleted.</param>
+        /// <returns>Redirects to the index action after deleting the document.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var documents = await _context.Documents.FindAsync(id);
-            _context.Documents.Remove(documents);
-            await _context.SaveChangesAsync();
+            await _documentService.DeleteDocumentAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool DocumentsExists(long id)
-        {
-            return _context.Documents.Any(e => e.Id == id);
         }
     }
 }

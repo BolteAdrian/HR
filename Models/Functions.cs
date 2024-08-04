@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HR.Models
 {
@@ -12,7 +6,7 @@ namespace HR.Models
     {
         public long Id { get; set; }
         [Required]
-        public string NameFunction { get; set; }
-        public long IdDepartment { get; set; }
+        public string Name { get; set; }
+        public long DepartmentId { get; set; }
     }
 }

@@ -1,172 +1,120 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using HR.DataModels;
 using HR.Models;
+using HR.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using ReflectionIT.Mvc.Paging;
 
 namespace HR.Controllers
 {
     public class FunctionsController : Controller
     {
-        private readonly modelContext _context;
+        private readonly FunctionsService _functionService;
 
-        public FunctionsController(modelContext context)
+        public FunctionsController(FunctionsService functionService)
         {
-            _context = context;
+            _functionService = functionService;
         }
 
         // GET: Functions
-
+        /// <summary>
+        /// Retrieves and displays a paginated list of functions with optional filtering and sorting.
+        /// </summary>
+        /// <param name="filter">Optional filter to apply to the function list.</param>
+        /// <param name="page">The page number to display (default is 1).</param>
+        /// <param name="sortExpression">The sorting criteria (default is "Id").</param>
+        /// <returns>Returns a view that displays the list of functions.</returns>
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string filter, int page = 1,
-                                            string sortExpression = "Id")
+        public async Task<IActionResult> Index(string filter, int page = 1, string sortExpression = "Id")
         {
-
-
-
-
-            var qry = _context.Functions.AsNoTracking().OrderBy(p => p.Id)
-                .AsQueryable();
-
-
-            if (!string.IsNullOrWhiteSpace(filter))
-            {
-                qry = qry.Where(p => p.NameFunction.Contains(filter));
-            }
-
-            var model = await PagingList.CreateAsync(
-                                         qry, 10, page, sortExpression, "NameFunction");
-
-            model.RouteValue = new RouteValueDictionary {
-        { "filter", filter}
-    };
-            List<Departments> f = _context.Departments.ToList();
-
-            ViewData["IdDepartment"] = f;
-            return View(model);
+            var functionsViewModel = await _functionService.GetFunctionsAsync(filter, page, sortExpression);
+            functionsViewModel.RouteValue = new RouteValueDictionary { { "filter", filter } };
+            ViewData["DepartmentId"] = _functionService.GetDepartments();
+            return View(functionsViewModel);
         }
 
-
-
-
-
-
-        public JsonResult DeleteEmployee(int EmployeeId)
+        // POST: Functions/DeleteFunction
+        /// <summary>
+        /// Deletes a specific function by ID and returns a JSON result indicating success.
+        /// </summary>
+        /// <param name="functionId">The ID of the function to be deleted.</param>
+        /// <returns>Returns a JSON result indicating whether the deletion was successful.</returns>
+        public async Task<JsonResult> DeleteFunction(long functionId)
         {
-            bool result = false;
-
-
-            Functions d = _context.Functions.Where(x => x.Id == EmployeeId).SingleOrDefault();
-            try
-            {
-
-                _context.Functions.Remove(d);
-                _context.SaveChanges();
-                TempData["AlertMessage"] = "Deleted with success";
-            }
-            catch { }
-
-            return Json(result);
+            await _functionService.DeleteFunctionAsync(functionId);
+            TempData["AlertMessage"] = "Deleted successfully";
+            return Json(new { success = true });
         }
-
 
         // GET: Functions/Create
+        /// <summary>
+        /// Displays a form to create a new function.
+        /// </summary>
+        /// <returns>Returns a view that allows creating a new function.</returns>
         public IActionResult Create()
         {
-            ViewData["IdDepartment"] = new SelectList(_context.Departments, "Id", "NameDepartment");
+            ViewData["DepartmentId"] = new SelectList(_functionService.GetDepartments(), "Id", "Name");
             return View();
         }
 
-        // POST: Functions/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-
-
-
-
-
-
-
-        // GET: Transaction/AddOrEdit(Insert)
-        // GET: Transaction/AddOrEdit/5(Update)
+        // GET: Functions/AddOrEdit
+        /// <summary>
+        /// Displays a form to add or edit a function based on the provided ID.
+        /// </summary>
+        /// <param name="id">The ID of the function to edit (0 for new function).</param>
+        /// <returns>Returns a view for adding or editing a function.</returns>
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
-            if (id == 0) { 
-                ViewData["IdDepartment"] = new SelectList(_context.Departments, "Id", "NameDepartment");
-            return View(new Functions());
-            
-        }
+            if (id == 0)
+            {
+                ViewData["DepartmentId"] = new SelectList(_functionService.GetDepartments(), "Id", "Name");
+                return View(new Functions());
+            }
             else
             {
-                var transactionModel = await _context.Functions.Where(x => x.Id == id).SingleOrDefaultAsync();
-
-                ViewData["IdDepartment"] = new SelectList(_context.Departments, "Id", "NameDepartment");
-                if (transactionModel == null)
+                var function = await _functionService.GetFunctionByIdAsync(id);
+                ViewData["DepartmentId"] = new SelectList(_functionService.GetDepartments(), "Id", "Name");
+                if (function == null)
                 {
                     return NotFound();
                 }
-                return View(transactionModel);
+                return View(function);
             }
         }
 
-
-
+        // POST: Functions/AddOrEdit
+        /// <summary>
+        /// Handles the creation or update of a function based on the provided ID.
+        /// </summary>
+        /// <param name="id">The ID of the function to update (0 for new function).</param>
+        /// <param name="function">The function data to be created or updated.</param>
+        /// <returns>Returns a JSON result indicating whether the operation was successful and includes the updated view.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddOrEdit(int id, [Bind("Id, NameFunction, IdDepartment")] Functions function)
+        public async Task<IActionResult> AddOrEdit(int id, [Bind("Id, Name, DepartmentId")] Functions function)
         {
             if (ModelState.IsValid)
             {
-                //Insert
                 if (id == 0)
                 {
-                    List<long> Tablou = _context.Functions
-.Select(u => u.Id)
-.ToList();
-                    int aux2 = ((int)Tablou.LastOrDefault() + 1);
-                    using (var transaction = _context.Database.BeginTransaction())
-                    {
-
-                        Functions e = new Functions();
-                        e.Id = aux2;
-                    e.IdDepartment = function.IdDepartment;
-                        e.NameFunction = function.NameFunction;
-
-
-                        _context.Functions.AddRange(e);
-                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Functions ON;");
-                        await _context.SaveChangesAsync();
-                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Functions OFF;");
-                        transaction.Commit();
-                        
-
-
-                        TempData["AlertMessage"] = "Inserted with success";
-
-                    }
+                    await _functionService.AddFunctionAsync(function);
+                    TempData["AlertMessage"] = "Inserted successfully";
                 }
-                //Update
                 else
                 {
-
                     try
                     {
-
-                        _context.Update(function);
-                        await _context.SaveChangesAsync();
-                        TempData["AlertMessage"] = "Updated with success";
+                        await _functionService.UpdateFunctionAsync(function);
+                        TempData["AlertMessage"] = "Updated successfully";
                     }
                     catch (DbUpdateConcurrencyException)
                     {
-                        if (!FunctionsExists(function.Id))
+                        if (!_functionService.FunctionExists(function.Id))
                         {
                             return NotFound();
                         }
@@ -175,39 +123,46 @@ namespace HR.Controllers
                             throw;
                         }
                     }
-
-
                 }
-                return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Functions.ToList()) });
+                return Json(new
+                {
+                    isValid = true,
+                    html = Helper.RenderRazorViewToString(this, "_ViewAll", await _functionService.GetFunctionsAsync(null, 1, "Name"))
+                });
             }
-            return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", function) });
+            return Json(new
+            {
+                isValid = false,
+                html = Helper.RenderRazorViewToString(this, "AddOrEdit", function)
+            });
         }
 
-
-
-
-
-
-
-
-
-
+        // POST: Functions/Create
+        /// <summary>
+        /// Handles the creation of a new function.
+        /// </summary>
+        /// <param name="function">The function data to be created.</param>
+        /// <returns>Redirects to the index view if successful, otherwise redisplays the form.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,NameFunction,IdDepartment")] Functions functions)
+        public async Task<IActionResult> Create([Bind("Id,Name,DepartmentId")] Functions function)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(functions);
-                await _context.SaveChangesAsync();
-                TempData["AlertMessage"] = "Inserted with success";
+                await _functionService.AddFunctionAsync(function);
+                TempData["AlertMessage"] = "Inserted successfully";
                 return RedirectToAction(nameof(Index));
             }
-            return View(functions);
+            return View(function);
         }
 
-        // GET: Functions/Edit/5
+        // GET: Functions/Edit/:id
+        /// <summary>
+        /// Displays a form to edit a specific function.
+        /// </summary>
+        /// <param name="id">The ID of the function to be edited.</param>
+        /// <returns>Returns a view for editing the function.</returns>
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(long? id)
         {
@@ -216,23 +171,28 @@ namespace HR.Controllers
                 return NotFound();
             }
 
-            var functions = await _context.Functions.FindAsync(id);
-            if (functions == null)
+            var function = await _functionService.GetFunctionByIdAsync(id);
+            if (function == null)
             {
                 return NotFound();
             }
-            ViewData["IdDepartment"] = new SelectList(_context.Departments, "Id", "NameDepartment");
-            return View(functions);
+            ViewData["DepartmentId"] = new SelectList(_functionService.GetDepartments(), "Id", "Name");
+            return View(function);
         }
 
-        // POST: Functions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Functions/Edit/:id
+        /// <summary>
+        /// Handles the update of a specific function.
+        /// </summary>
+        /// <param name="id">The ID of the function to be updated.</param>
+        /// <param name="function">The function data to be updated.</param>
+        /// <returns>Redirects to the index view if successful, otherwise redisplays the form.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,NameFunction,IdDepartment")] Functions functions)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,DepartmentId")] Functions function)
         {
-            if (id != functions.Id)
+            if (id != function.Id)
             {
                 return NotFound();
             }
@@ -241,13 +201,12 @@ namespace HR.Controllers
             {
                 try
                 {
-                    _context.Update(functions);
-                    await _context.SaveChangesAsync();
-                    TempData["AlertMessage"] = "Updated with success";
+                    await _functionService.UpdateFunctionAsync(function);
+                    TempData["AlertMessage"] = "Updated successfully";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FunctionsExists(functions.Id))
+                    if (!_functionService.FunctionExists(function.Id))
                     {
                         return NotFound();
                     }
@@ -258,14 +217,18 @@ namespace HR.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(functions);
+            return View(function);
         }
 
-   
-
-        private bool FunctionsExists(long id)
+        // Private method to check if a function exists by ID
+        /// <summary>
+        /// Checks if a function exists by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the function to check.</param>
+        /// <returns>Returns true if the function exists, otherwise false.</returns>
+        private bool FunctionExists(long id)
         {
-            return _context.Functions.Any(e => e.Id == id);
+            return _functionService.FunctionExists(id);
         }
     }
 }

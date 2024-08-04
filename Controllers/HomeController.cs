@@ -1,11 +1,7 @@
-﻿using HR.Models;
+﻿using HR.DataModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HR.Controllers
 {
@@ -18,20 +14,39 @@ namespace HR.Controllers
             _logger = logger;
         }
 
+        // GET: Home/Index
+        /// <summary>
+        /// Displays the home page of the application.
+        /// </summary>
+        /// <returns>Returns the view for the home page.</returns>
         public IActionResult Index()
         {
             return View();
         }
 
+        // GET: Home/Privacy
+        /// <summary>
+        /// Displays the privacy policy page of the application.
+        /// </summary>
+        /// <returns>Returns the view for the privacy policy page.</returns>
         public IActionResult Privacy()
         {
             return View();
         }
 
+        // GET: Home/Error
+        /// <summary>
+        /// Displays an error page with the request ID for debugging purposes.
+        /// </summary>
+        /// <returns>Returns the view for the error page.</returns>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var errorViewModel = new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(errorViewModel);
         }
     }
 }

@@ -8558,7 +8558,7 @@ jQuery.extend( {
 							return value;
 						}
 
-						// Multi-Selects return an array
+						// JobApplicationDetail-Selects return an array
 						values.push( value );
 					}
 				}

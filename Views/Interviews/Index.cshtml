@@ -1,0 +1,202 @@
+﻿@model ReflectionIT.Mvc.Paging.PagingList<JobApplicationDetails>
+@using ReflectionIT.Mvc.Paging
+@addTagHelper *, ReflectionIT.Mvc.Paging
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+
+    @if (TempData["AlertMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">@TempData["AlertMessage"]</div>
+    }
+
+    <h2>Interviews</h2>
+
+    <div class="pages_container mb-3">
+        <input type="button" value="Add Interview" class="btn btn-success text-white" onclick="location.href='@Url.Action("Create", "Interviews")'" />
+        <input type="button" value="Statistics" class="btn btn-success text-white" onclick="location.href='@Url.Action("Statistics", "Interviews")'" />
+        <input type="button" value="Employees Management" class="btn btn-success text-white" onclick="location.href='@Url.Action("Index", "Employees")'" />
+    </div>
+
+    <div class="filter-menu_container mb-3">
+        <form method="get" class="form-inline">
+            <input name="filter" class="form-control" placeholder="Search"
+                   value="@(Model.RouteValue != null && Model.RouteValue.ContainsKey("filter") ? Model.RouteValue["filter"] : "")" />
+            <button type="submit" class="btn btn-info">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+            </button>
+        </form>
+
+        <div class="menu-container">
+            <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
+            <div class="dropdown-content" id="dropdownMenu">
+                <a onclick="showInPopup('@Url.Action("Index", "Emails", null, Context.Request.Scheme)', 'Email')">Email</a>
+                <form method="post" asp-controller="Interviews" asp-action="ExportToExcel">
+                    <input class="export_button btn btn-info" type="submit" value="Export To Excel" />
+                </form>
+                <a href="javascript:void(0);" onclick="printPageArea('printableArea')">Print</a>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Procent != null)
+    {
+        <div class="mb-3">Employment percentage: @ViewBag.Procent%</div>
+    }
+
+    <div id="printableArea" class="mb-3 big_table">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>@Html.SortableHeaderFor(model => model.Id)</th>
+                    <th>@Html.SortableHeaderFor(model => model.CandidateName)</th>
+                    <th>@Html.SortableHeaderFor(model => model.InterviewDate)</th>
+                    <th>@Html.SortableHeaderFor(model => model.Function)</th>
+                    <th>@Html.SortableHeaderFor(model => model.EmployeeName)</th>
+                    <th>@Html.SortableHeaderFor(model => model.TestResult)</th>
+                    <th>@Html.SortableHeaderFor(model => model.Accepted)</th>
+                    <th>@Html.SortableHeaderFor(model => model.DateAnswer)</th>
+                    <th>@Html.SortableHeaderFor(model => model.OfferStatus)</th>
+                    <th>@Html.SortableHeaderFor(model => model.EmploymentDate)</th>
+                    <th>@Html.SortableHeaderFor(model => model.Comments)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="row_@item.Id">
+                        <td>@item.Id</td>
+                        <td>@item.CandidateName</td>
+                        <td>@item.InterviewDate.ToShortDateString()</td>
+                        <td>@item.Function</td>
+                        <td>@item.EmployeeName</td>
+                        <td>@item.TestResult</td>
+                        <td>@(item.Accepted)</td>
+                        <td>@item.DateAnswer?.ToShortDateString()</td>
+                        <td>@(item.OfferStatus == 2 ? "Refused" : "Signed")</td>
+                        <td>@item.EmploymentDate</td>
+                        <td>@item.Comments</td>
+                        <td class="action_container">
+                            <a class="btn btn-info text-white" asp-action="Edit" asp-route-id="@item.Id">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                            <button class="btn btn-danger" onclick="ConfirmDelete(@item.Id)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <nav aria-label="Page navigation">
+        <vc:pager paging-list="@Model" />
+    </nav>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Delete Interview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this Interview?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="DeleteInterview()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Modal -->
+    <div class="modal fade" id="form-modal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="formModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="hiddenId" />
+
+    <input type="button" value="Back" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Home")'" />
+
+    <script>
+        function ConfirmDelete(Id) {
+            $("#hiddenId").val(Id);
+            $("#myModal").modal('show');
+        }
+
+        function DeleteInterview() {
+            $("#loaderDiv").show();
+            var interviewId = $("#hiddenId").val();
+            $.ajax({
+                url: '@Url.Action("DeleteInterview", "Interviews")',
+                data: { interviewId: interviewId },
+                success: function () {
+                    $("#loaderDiv").hide();
+                    $("#myModal").modal("hide");
+                    $("#row_" + interviewId).remove();
+                    location.reload();
+                },
+                error: function (result) {
+                    console.error(result);
+                }
+            });
+        }
+
+        function printPageArea(areaID) {
+            var printContent = document.getElementById(areaID);
+            var WinPrint = window.open('', '', 'width=900,height=650');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+            WinPrint.close();
+        }
+
+        function toggleMenu() {
+            var menu = document.getElementById('dropdownMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.matches('.menu-icon')) {
+                var dropdowns = document.getElementsByClassName('dropdown-content');
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.style.display === 'block') {
+                        openDropdown.style.display = 'none';
+                    }
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
