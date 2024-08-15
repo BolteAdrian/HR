@@ -24,6 +24,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="DevExtreme.AspNet.Data" Version="2.8.2" />
+    <PackageReference Include="Microsoft.ML" Version="1.7.1" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="1.7.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     <PackageReference Include="ReflectionIT.Mvc.Paging" Version="4.0.0" />
   </ItemGroup>
@@ -33,5 +35,17 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="wwwroot\CVs\" />
+  </ItemGroup>
+  <ItemGroup Label="MLModelHR">
+    <None Include="MLModelHR.consumption.cs">
+      <DependentUpon>MLModelHR.mbconfig</DependentUpon>
+    </None>
+    <None Include="MLModelHR.training.cs">
+      <DependentUpon>MLModelHR.mbconfig</DependentUpon>
+    </None>
+    <None Include="MLModelHR.zip">
+      <DependentUpon>MLModelHR.mbconfig</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

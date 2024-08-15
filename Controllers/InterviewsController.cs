@@ -236,9 +236,12 @@ namespace HR.Controllers
                     var worksheet = workbook.Worksheets.Add("Interviews");
                     PopulateWorksheetHeader(worksheet);
 
+                    int row = 2; // Start at the second row (since the first row is for headers)
+
                     foreach (var record in jobApplicationDetailsList)
                     {
-                        PopulateWorksheetRow(worksheet, record);
+                        PopulateWorksheetRow(worksheet, record, row); // Pass the row number to the method
+                        row++; // Increment the row number for the next record
                     }
 
                     using (var stream = new MemoryStream())
@@ -530,20 +533,20 @@ namespace HR.Controllers
         /// <param name="worksheet">The worksheet to populate.</param>
         private void PopulateWorksheetHeader(IXLWorksheet worksheet)
         {
-            worksheet.Cell(1, 1).Value = "CandidateId";
-            worksheet.Cell(1, 2).Value = "InterviewDate";
-            worksheet.Cell(1, 3).Value = "FunctionApply";
-            worksheet.Cell(1, 4).Value = "DepartamentApply";
-            worksheet.Cell(1, 5).Value = "Accepted";
-            worksheet.Cell(1, 6).Value = "TestResult";
-            worksheet.Cell(1, 7).Value = "RefusedReason";
-            worksheet.Cell(1, 8).Value = "RefusedObservation";
-            worksheet.Cell(1, 9).Value = "Comments";
-            worksheet.Cell(1, 10).Value = "DateAnswer";
-            worksheet.Cell(1, 11).Value = "OfferStatus";
-            worksheet.Cell(1, 12).Value = "EmploymentDate";
-            worksheet.Cell(1, 13).Value = "InterviewCvid";
-            worksheet.Cell(1, 14).Value = "EmployeeId";
+            worksheet.Cell(1, 1).Value = "Candidate Name";
+            worksheet.Cell(1, 2).Value = "Interview Date";
+            worksheet.Cell(1, 3).Value = "Function Apply";
+            worksheet.Cell(1, 4).Value = "Departament Apply";
+            worksheet.Cell(1, 5).Value = "Test Result";
+            worksheet.Cell(1, 6).Value = "Accepted";
+            worksheet.Cell(1, 7).Value = "Refused Reason";
+            worksheet.Cell(1, 8).Value = "Comments";
+            worksheet.Cell(1, 9).Value = "Date Answer";
+            worksheet.Cell(1, 10).Value = "Offer Status";
+            worksheet.Cell(1, 11).Value = "Employment Date";
+            worksheet.Cell(1, 12).Value = "Interview Id";
+            worksheet.Cell(1, 13).Value = "EmployeeId";
+            worksheet.Cell(1, 13).Value = "Employee Name";
         }
 
         /// <summary>
@@ -551,22 +554,23 @@ namespace HR.Controllers
         /// </summary>
         /// <param name="worksheet">The worksheet to populate.</param>
         /// <param name="record">The interview record data.</param>
-        private void PopulateWorksheetRow(IXLWorksheet worksheet, JobApplicationDetails record)
+        /// <param name="row">The row number to populate.</param>
+        private void PopulateWorksheetRow(IXLWorksheet worksheet, JobApplicationDetails record, int row)
         {
-            int row = 2;
-            worksheet.Cell(row, 1).Value = record.CandidateId;
+            worksheet.Cell(row, 1).Value = record.CandidateName;
             worksheet.Cell(row, 2).Value = record.InterviewDate;
             worksheet.Cell(row, 3).Value = record.Function;
             worksheet.Cell(row, 4).Value = record.Department;
-            worksheet.Cell(row, 5).Value = record.Accepted;
-            worksheet.Cell(row, 6).Value = record.TestResult;
+            worksheet.Cell(row, 5).Value = record.TestResult;
+            worksheet.Cell(row, 6).Value = record.Accepted;
             worksheet.Cell(row, 7).Value = record.RefusedReason;
-            worksheet.Cell(row, 9).Value = record.Comments;
-            worksheet.Cell(row, 10).Value = record.DateAnswer;
-            worksheet.Cell(row, 11).Value = record.OfferStatus;
-            worksheet.Cell(row, 12).Value = record.EmploymentDate;
-            worksheet.Cell(row, 13).Value = record.Id;
-            worksheet.Cell(row, 14).Value = record.EmployeeId;
+            worksheet.Cell(row, 8).Value = record.Comments;
+            worksheet.Cell(row, 9).Value = record.DateAnswer;
+            worksheet.Cell(row, 10).Value = record.OfferStatus;
+            worksheet.Cell(row, 11).Value = record.EmploymentDate;
+            worksheet.Cell(row, 12).Value = record.Id;
+            worksheet.Cell(row, 13).Value = record.EmployeeId;
+            worksheet.Cell(row, 13).Value = record.EmployeeName;
         }
     }
 }

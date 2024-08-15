@@ -1,7 +1,6 @@
 ﻿using HR.Models;
 using HR.Repository;
 using HR.Utils;
-using HRML.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static HR.MLModelHR;
 
 namespace HR.Controllers
 {
@@ -57,16 +57,28 @@ namespace HR.Controllers
                             BirthDate = personCv.BirthDate?.ToShortDateString() ?? Constants.PREDICTION.NoDataFound
                         };
 
-                        long functionId = (long)personCv.FunctionApply;
-                        var function = functions.FirstOrDefault(f => f.Id == functionId);
-                        if (function != null)
+                        long functionApplyId = (long)personCv.FunctionApply;
+                        var functionApply = functions.FirstOrDefault(f => f.Id == functionApplyId);
+                        if (functionApply != null)
                         {
-                            modelInput.FunctionName = function.Name;
-                            var department = await _context.Departments.AsNoTracking().FirstOrDefaultAsync(d => d.Id == function.DepartmentId);
-                            modelInput.DepartmentName = department?.Name ?? Constants.PREDICTION.NoDataFound;
+                            modelInput.Function_Apply = functionApply.Name;
                         }
 
-                        modelInput.ModeApply = (float)personCv.ModeApply;
+                        if (personCv.FunctionMatch != null)
+                        {
+                            long functionMatchId = (long)personCv.FunctionMatch;
+                            var functionMatch = functions.FirstOrDefault(f => f.Id == functionMatchId);
+                            if (functionMatch != null)
+                            {
+                                modelInput.Function_Apply = functionMatch.Name;
+                            }
+                        }
+                        else
+                        {
+                            modelInput.Function_Apply = null;
+                        }
+
+                        modelInput.Mode_Apply = personCv.ModeApply.ToString();
                         modelInput.Studies = personCv.Studies;
                         modelInput.Experience = personCv.Experience;
                         modelInput.Observation = personCv.Observation;
@@ -84,7 +96,7 @@ namespace HR.Controllers
                 foreach (var modelInput in modelInputs)
                 {
                     // Load model and predict output of sample data
-                    ModelOutput result = ConsumeModel.Predict(modelInput);
+                    ModelOutput result = MLModelHR.Predict(modelInput);
                     predictions.Add((int)modelInput.Id, result.Score[0] * 100);
                 }
 

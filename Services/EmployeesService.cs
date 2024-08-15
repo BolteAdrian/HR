@@ -167,13 +167,13 @@ namespace HR.Services
 
                     // Set up the header row.
                     worksheet.Cell(currentRow, 1).Value = "Id";
-                    worksheet.Cell(currentRow, 2).Value = "EmployeeId";
+                    worksheet.Cell(currentRow, 2).Value = "Employee Id";
                     worksheet.Cell(currentRow, 3).Value = "Name";
-                    worksheet.Cell(currentRow, 4).Value = "OrganizationId";
-                    worksheet.Cell(currentRow, 5).Value = "EmploymentDate";
+                    worksheet.Cell(currentRow, 4).Value = "Organization Id";
+                    worksheet.Cell(currentRow, 5).Value = "Employment Date";
                     worksheet.Cell(currentRow, 6).Value = "Email";
                     worksheet.Cell(currentRow, 7).Value = "Team";
-                    worksheet.Cell(currentRow, 8).Value = "CompanyShortName";
+                    worksheet.Cell(currentRow, 8).Value = "Company Short Name";
 
                     // Populate the worksheet with employee data.
                     foreach (var employee in await _context.Employees.ToListAsync())

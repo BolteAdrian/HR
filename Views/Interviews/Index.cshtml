@@ -43,7 +43,7 @@
             <div class="dropdown-content" id="dropdownMenu">
                 <a onclick="showInPopup('@Url.Action("Index", "Emails", null, Context.Request.Scheme)', 'Email')">Email</a>
                 <form method="post" asp-controller="Interviews" asp-action="ExportToExcel">
-                    <input class="export_button btn btn-info" type="submit" value="Export To Excel" />
+                    <input class="export_button" type="submit" value="Export To Excel" />
                 </form>
                 <a href="javascript:void(0);" onclick="printPageArea('printableArea')">Print</a>
             </div>
@@ -144,7 +144,7 @@
 
     <input type="hidden" id="hiddenId" />
 
-    <input type="button" value="Back" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Home")'" />
+    <input type="button" value="Back" class="buttons_container btn btn-secondary" onclick="location.href='@Url.Action("Index", "Home")'" />
 
     <script>
         function ConfirmDelete(Id) {
